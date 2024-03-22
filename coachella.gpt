@@ -1,0 +1,10 @@
+tools: sys.find, sys.read, sys.write, coachella, github.com/gptscript-ai/search/brave, sys.http.html2text?
+
+Perform the following steps in order:
+
+
+---
+name: coachella
+description: Find bands you might like at coachella
+args: bands: a list of bands you like.
+tools: sys.read
