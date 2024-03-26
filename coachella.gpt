@@ -1,10 +1,42 @@
-tools: sys.find, sys.read, sys.write, coachella, github.com/gptscript-ai/search/brave, sys.http.html2text?
+tools: sys.read, sys.write, search-coachella, github.com/gptscript-ai/search/brave, sys.http.html2text?, get-songs-from-artist-url
+args: bands: A list of bands you like.
 
 Perform the following steps in order:
 
+You are a music expert and expert web researcher with access to the Brave Search API and sys.http.html2text? tool.
+
+Search brave to find names of music bands which are similar to "${bands}" and compile them into one list including the original names of "${bands}", which we will call moreBands.  To do this search, first search to find the genre of each artist.  Gather all the genres and remove duplicates.  Then do a series of searches to find the top artists/groups for each genre.  
+Add as many of those artist names as possible from the search results to the original bands list.  If you don't find any bands searching, just move to the next step.
+
+Next do another search.  Add to that list of moreBands, with another search simply for bands similar to the initial ${bands} inputs.  Gather band names from the first 3 search results and append them onto moreBands.
+
+Next find bands on coachella's lineup page which match the current list of bands using the coachella tool along with (optionally) their spotify page.  
+
+If no bands are found on the coachella page say "could not find a match" and list all the args.
+  
+If you found bands return the data in json with format as an array where each object has the following structure { "bandName": value, "spotifyUrl": url_value, songs: [{"name": value, "url": song_url_value}] }
 
 ---
-name: coachella
+name: search-coachella
 description: Find bands you might like at coachella
-args: bands: a list of bands you like.
-tools: sys.read
+args: bands: A list of bands you like.
+tools: download-coachella-content
+
+First download the content of coachella lineup page.
+
+Look for all bands or artists in the ${bands} list
+
+Return the names of these bands along with (optionally) a link to their spotify page.
+
+---
+name: download-coachella-content
+description: Content of coachella lineup page
+
+#!python3 coachella.py "https://www.coachella.com/lineup"
+
+---
+name: get-songs-from-artist-url
+description: get songs from url of spotify artist
+args: url: url towards an artist
+
+#!python3 songs.py "$url"
