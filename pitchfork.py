@@ -7,7 +7,6 @@ from selenium.webdriver.support import expected_conditions as EC
 
 # Get url
 url = sys.argv[1]
-filename = sys.argv[2] if len(sys.argv) > 2 else 'website.txt'
 
 # Setup WebDriver options
 options = webdriver.ChromeOptions()

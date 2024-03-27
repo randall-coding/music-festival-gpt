@@ -3,40 +3,58 @@ args: bands: A list of bands you like.
 
 Perform the following steps in order:
 
-You are a music expert and expert web researcher with access to the Brave Search API and sys.http.html2text? tool.
+You are a music expert, concert expert, and expert web researcher.
 
-Search brave to find names of music bands which are similar to "${bands}" and compile them into one list including the original names of "${bands}", which we will call moreBands.  To do this search, first search to find the genre of each artist.  Gather all the genres and remove duplicates.  Then do a series of searches to find the top artists/groups for each genre.  
-Add as many of those artist names as possible from the search results to the original bands list.  If you don't find any bands searching, just move to the next step.
+Based on the user input, find bands on coachella's lineup page which the user would like that are playing.  This can include the specific bands the user mentioned along with similar ones.  
 
-Next do another search.  Add to that list of moreBands, with another search simply for bands similar to the initial ${bands} inputs.  Gather band names from the first 3 search results and append them onto moreBands.
-
-Next find bands on coachella's lineup page which match the current list of bands using the coachella tool along with (optionally) their spotify page.  
-
-If no bands are found on the coachella page say "could not find a match" and list all the args.
+If none of the bands are found on the coachella lineup say "Could not find any matches" and list all the args.
   
-If you found bands return the data in json with format as an array where each object has the following structure { "bandName": value, "spotifyUrl": url_value, songs: [{"name": value, "url": song_url_value}] }
+If you found bands playing next at Coachella return all the data in json with format as an array where each object has the following structure { "bandName": value, "spotifyUrl": url_value, songs: [{"name": value, "url": song_url_value}] }.  Try to find songs for each, but if you can's leave it blank. 
+
+But before you output that, if you could not find songs for any artist, use search to find the correct link to their spotify by searching "Spotify artist ${band}" and trying again. 
 
 ---
 name: search-coachella
 description: Find bands you might like at coachella
 args: bands: A list of bands you like.
-tools: download-coachella-content
+#tools: download-coachella-content
+tools: sys.http.html2text?, sys.read, sys.write, github.com/gptscript-ai/search/brave
 
-First download the content of coachella lineup page.
+#First download the content of coachella lineup page, https://www.coachella.com/lineup into website.txt file and allow 5 minutes to load.
 
-Look for all bands or artists in the ${bands} list
+Do the following in order:
 
-Return the names of these bands along with (optionally) a link to their spotify page.
+Write down the input bands you've parsed from the input into input.txt file.
+
+Next search for the upcoming coachella lineup based on a specific year (either this year or next year if we passed it) and find the pitchfork.com page for it.  Search should look like "coachella lineup site:pitchfork.com"
+
+Take that url, visit the page and save all the bands playing at coachella in lineup.txt.  
+
+Next search through lineup.txt to find all bands or artists playing at coachella that are also in the input.txt list AND bands which are similar to those (use your own LLM knowledge for that, not search) and write these bands into matches.txt file (create an actual file!). 
+
+#For any input band not found in matches output "No ${bandName} at coachella" if it cannot be found. 
+
+Return all the bands from matches along with (optionally, but try for each) a working link to their spotify page.
+
+#---
+#name: download-coachella-content
+#description: Content of coachella lineup page
+
+# #!python3 coachella.py "https://www.coachella.com/lineup"
 
 ---
-name: download-coachella-content
-description: Content of coachella lineup page
+name: download-website-content
+description: used to download websites including those which render using javascript 
+args: url: url to download
+args: filename: (optional) filename to write website into.  default to "website.txt"
+args: wait_time: (optional) wait time in seconds to allow the page to load.  default None.
 
-#!python3 coachella.py "https://www.coachella.com/lineup"
+#!python3 download-website-content.py "$url"
 
 ---
 name: get-songs-from-artist-url
 description: get songs from url of spotify artist
 args: url: url towards an artist
+tools: github.com/gptscript-ai/search/brave
 
 #!python3 songs.py "$url"
