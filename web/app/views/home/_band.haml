@@ -1,0 +1,5 @@
+%h5= band.name
+%ul
+  - band.songs.each do |song|
+    %li= link_to song.name, song.spotify_url
+%hr
