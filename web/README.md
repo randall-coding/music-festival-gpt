@@ -1,24 +1,14 @@
 # README
+initialization:
+* cp config/database.yml.example config/database.yml
+* cp config/application.yml.example config/application.yml
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Run Docker:
 
-Things you may want to cover:
+* docker-compose build
 
-* Ruby version
+* docker-compose run app rake db:create
+* docker-compose run app rake rails db:migrate
+* docker-compose run app rake rails db:seed
 
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+* docker-compose up

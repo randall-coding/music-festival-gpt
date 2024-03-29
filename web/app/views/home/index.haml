@@ -1,8 +1,24 @@
 .container.mt-4
-  .input-group.mb-3
-    .input-group-prepend
-      %button.input-group-text Search
-    %input.form-control{type: "text",  placeholder: "Tell us about bands you like..."}
-  %h4.mb-3 Bands at coachella
-  - @bands.each do |band|
-    = render "home/band", band: band
+  %form{action: "/", method: "get", id: 'searchForm'}
+    .input-group.mb-3
+      .input-group-prepend
+        %button.input-group-text#search-btn{type: "submit"} Search
+      %input.form-control{name: "input", type: "text", placeholder: "Tell us about bands you like...", value: params[:input]}  
+  %h4.mb-3 Bands you might like at coachella
+  .content  
+    -# = "My bands count " + @bands&.count.to_s
+    - @bands&.each do |band|
+      = render "home/band", band: band
+  .loading-gif{style: "display: none; margin-left: 150px;"}
+    = image_tag "loading.gif"
+
+:javascript
+  document.addEventListener('DOMContentLoaded', function () {
+    document.getElementById('searchForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      document.getElementById('search-btn').remove();
+      document.querySelector('.loading-gif').style.display = 'block';
+      document.querySelector('.content').innerHTML = ''; 
+      this.submit(); 
+    });
+  });

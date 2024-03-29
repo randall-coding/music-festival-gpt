@@ -1,5 +1,16 @@
-%h5= band.name
+%h5= band["name"]
 %ul
-  - band.songs.each do |song|
-    %li= link_to song.name, song.spotify_url
+  - band["songs"].each do |song|
+    %li= link_to song["name"], song["url"]
 %hr
+
+
+-# {"bandName"=>"DJ Snake",
+-#  "spotifyUrl"=>"https://open.spotify.com/artist/540vIaP2JwjQb9dm3aArA4",
+-#  "songs"=>
+-#   [{"name"=>"Lean On (feat. MØ & DJ Snake)",
+-#     "url"=>"https://open.spotify.com/track/1qE47wUKG2juJwPoLqg4C9"},
+-#    {"name"=>"Let Me Love You",
+-#     "url"=>"https://open.spotify.com/track/0lYBSQXN6rCTvUZvg9S0lU"},
+-#    {"name"=>"Please Don't Change (feat. DJ Snake)",
+-#     "url"=>"https://open.spotify.com/track/0k0GtcnyQLMiXrdEDbLXmJ"}]}
