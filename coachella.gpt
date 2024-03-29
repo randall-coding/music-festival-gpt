@@ -9,7 +9,7 @@ Based on the user input, find bands on coachella's lineup page which the user wo
 
 If none of the bands are found on the coachella lineup say "Could not find any matches" and list all the args.
   
-If you found bands playing next at Coachella return all the data in json with format as an array where each object has the following structure { "bandName": value, "spotifyUrl": url_value, songs: [{"name": value, "url": song_url_value}] }.  Try to find songs for each, but if you can's leave it blank. 
+If you found bands playing next at Coachella return all the data in json with format as an array where each object has the following structure { "name": value, "spotifyUrl": url_value, songs: [{"name": value, "url": song_url_value}] }.  Try to find songs for each, but if you can's leave it blank. 
 
 But before you output that, if you could not find songs for any artist, use search to find the correct link to their spotify by searching "Spotify artist ${band}" and trying again. 
 
