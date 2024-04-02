@@ -7,17 +7,17 @@ RUN apt-get update && apt-get install -y \
   nodejs \
   yarn
 
-RUN mkdir /web
 RUN mkdir /gpt
+RUN mkdir /gpt/web
 
-COPY Gemfile /web/Gemfile
-COPY Gemfile.lock /web/Gemfile.lock
+COPY ./web/Gemfile /gpt/web/Gemfile
+COPY ./web/Gemfile.lock /gpt/web/Gemfile.lock
 
-WORKDIR /web
+WORKDIR /gpt/web
 RUN bundle install
 
-COPY . /web
-COPY ../ /gpt
+# COPY ./web /gpt/web
+COPY . /gpt
 
 RUN pip install -r /gpt/requirements.txt
 RUN curl https://get.gptscript.ai/install.sh | sh
