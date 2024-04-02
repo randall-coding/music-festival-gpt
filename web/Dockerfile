@@ -7,15 +7,19 @@ RUN apt-get update && apt-get install -y \
   nodejs \
   yarn
 
-RUN mkdir /coachella-private
-WORKDIR /coachella-private
+RUN mkdir /web
+RUN mkdir /gpt
 
-COPY Gemfile /coachella-private/Gemfile
-COPY Gemfile.lock /coachella-private/Gemfile.lock
+COPY Gemfile /web/Gemfile
+COPY Gemfile.lock /web/Gemfile.lock
+
+WORKDIR /web
 RUN bundle install
 
-COPY . /coachella-private
-RUN pip install -r /coachella-private/lib/coachella-gpt-master/requirements.txt
+COPY . /web
+COPY ../ /gpt
+
+RUN pip install -r /gpt/requirements.txt
 RUN curl https://get.gptscript.ai/install.sh | sh
 
 EXPOSE 3000
