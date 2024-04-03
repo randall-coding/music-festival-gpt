@@ -9,15 +9,17 @@
     -# = "My bands count " + @bands&.count.to_s
     - @bands&.each do |band|
       = render "home/band", band: band
-  .loading-gif{style: "display: none; margin-left: 150px;"}
-    = image_tag "loading.gif"
+  .loading-gif{style: "display: none;"}
+    .d-flex.justify-content-center.align-items-center.flex-column
+      = image_tag "loading.gif"
+      This may take a few minutes... 
 
 :javascript
   document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('searchForm').addEventListener('submit', function(e) {
       e.preventDefault();
       document.getElementById('search-btn').remove();
-      document.querySelector('.loading-gif').style.display = 'block';
+      document.querySelector('.loading-gif').style.display = 'flex';
       document.querySelector('.content').innerHTML = ''; 
       this.submit(); 
     });

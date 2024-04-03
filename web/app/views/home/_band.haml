@@ -1,6 +1,6 @@
 %h5= band["name"]
 %ul
-  - band["songs"].each do |song|
+  - band["songs"]&.each do |song|
     %li= link_to song["name"], song["url"]
 %hr
 

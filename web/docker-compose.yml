@@ -1,0 +1,27 @@
+version: "3.9"
+services:
+  postgres:
+    image: postgres:14.5
+    environment:
+      POSTGRES_USER: john
+      POSTGRES_PASSWORD: 123QWEasd
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres:/var/lib/postgresql/data
+
+  app:
+    build:
+      context: .
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
+    volumes:
+      - .:/coachella-private
+    links:
+      - postgres
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+
+volumes:
+  postgres:

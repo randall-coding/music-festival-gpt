@@ -13,3 +13,11 @@
  *= require_tree .
  *= require_self
  */
+
+ .loading-gif {
+  /* display: flex; */
+  flex-direction: column;
+  justify-content: center;
+  justify-items: center;
+  align-items: start;
+ }
