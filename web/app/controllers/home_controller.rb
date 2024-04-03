@@ -30,6 +30,7 @@ class HomeController < ApplicationController
           Rails.logger.info @bands
         else
           puts "Error: #{stderr}"
+          @error = stderr 
         end
       end
     end

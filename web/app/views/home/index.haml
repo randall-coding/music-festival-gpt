@@ -13,6 +13,9 @@
     .d-flex.justify-content-center.align-items-center.flex-column
       = image_tag "loading.gif"
       This may take a few minutes... 
+  - if @error
+    .text-danger.errors 
+      =@error
 
 :javascript
   document.addEventListener('DOMContentLoaded', function () {
@@ -21,6 +24,7 @@
       document.getElementById('search-btn').remove();
       document.querySelector('.loading-gif').style.display = 'flex';
       document.querySelector('.content').innerHTML = ''; 
+      document.querySelector('.errors').innerHTML = '';
       this.submit(); 
     });
   });
