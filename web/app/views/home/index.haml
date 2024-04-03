@@ -13,9 +13,8 @@
     .d-flex.justify-content-center.align-items-center.flex-column
       = image_tag "loading.gif"
       This may take a few minutes... 
-  - if @error
-    .text-danger.errors 
-      =@error
+  .text-danger.errors 
+    = @error
 
 :javascript
   document.addEventListener('DOMContentLoaded', function () {
