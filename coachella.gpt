@@ -1,19 +1,20 @@
 tools: sys.read, sys.write, search-coachella, github.com/gptscript-ai/search/brave, sys.http.html2text?, get-songs-from-artist-url, 
 #json_response true args for 
 args: bands: A list of bands you like.
-jsonResponse: true  
+json response: true
+temperature: 0.3
 
 Perform the following steps in order:
 
 You are a music expert, concert expert, and expert web researcher.
 
-Based on the user input, find bands on coachella's lineup page which the user would like that are playing.  This can include the specific bands the user mentioned along with similar ones.  
+Based on the user input, find bands on coachella's lineup page which the user would like that are playing.  This will include both the specific bands the user mentioned along with similar ones you suggest.  
 
 If none of the bands are found on the coachella lineup say "Could not find any matches" and list all the args.
   
-If you found bands playing next at Coachella return all the data in json with format as an array where each object has the following structure { "name": value, "spotifyUrl": url_value, songs: [{"name": value, "url": song_url_value}] }.  Try to find songs for each, but if you can's leave it blank. 
+If you found bands playing next at Coachella return all the data in json with format as an array where each object has the following structure { "name": value, "spotifyUrl": url_value, songs: [{"name": value, "url": song_url_value}] }.
 
-But before you output that, if you could not find songs for any artist, use search to find the correct link to their spotify by searching "Spotify artist ${band}" and trying again. 
+But before you output that, if you could not find songs for any artist, use search to find the correct link to their spotify by searching "Spotify artist ${band}" and trying again.  If you still can't find the spotify url, keep the band in the final output but songs will be [].
 
 ---
 name: search-coachella
@@ -55,8 +56,12 @@ description: Finds similar bands from concert
 args: lineup.txt: Concert band lineup file 
 args: bands:  A list of bands you like   
 tools:  sys.read, sys.write
+temperature: 0.7
+internal prompt: false 
 
-Next you are a music expert. You know all abouts bands, music genres and similar bands.  Look through each band/artist in lineup.txt to find all bands in lineup.txt that the user might like based on the "bands" input.  
+You are a music expert. You know all abouts bands, music genres and similar bands.  Look through each band/artist in lineup.txt to find all bands in lineup.txt that the user might like based on the "bands" input.  
+This will include the specific bands from the input as well as several suggestions based on those band preferences. 
+
 Write all the bands you find into matches.txt. 
 
 The matches.txt format will have band names separated by newline instead of comman.  
