@@ -17,3 +17,6 @@ export GPTSCRIPT_BRAVE_SEARCH_TOKEN=your-api-key
 # Run the example
 gptscript coachella.gpt DJ Snake
 ```
+
+## Deployment 
+https://coachella-gpt.onrender.com/
