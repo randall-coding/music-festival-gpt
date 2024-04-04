@@ -25,7 +25,11 @@ class HomeController < ApplicationController
           parsed_string = stdout.gsub("```json\n", "").gsub("\n```", "").strip
           json_output = JSON.parse(parsed_string)
           @bands = json_output
-          @bands = [@bands] unless @bands.is_a? Array
+          if @bands["bands"]
+            @bands = @bands["bands"]   
+          else 
+            @bands = [@bands] unless @bands.is_a? Array
+          end 
           Rails.logger.info "GPTscript successful.  Output is:"
           Rails.logger.info @bands
         else
