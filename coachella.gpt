@@ -2,7 +2,7 @@ tools: sys.read, sys.write, search-coachella, github.com/gptscript-ai/search/bra
 #json_response true args for 
 args: bands: A list of bands you like.
 json response: true
-temperature: 0.3
+temperature: 0.2
 
 Perform the following steps in order:
 
@@ -80,5 +80,6 @@ name: get-songs-from-artist-url
 description: get songs from url of spotify artist
 args: url: url towards an artist
 tools: github.com/gptscript-ai/search/brave
+temperature: 0.2
 
 #!python3 songs.py "$url"
