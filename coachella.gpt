@@ -14,7 +14,7 @@ If none of the bands are found on the coachella lineup say "Could not find any m
   
 If you found bands playing next at Coachella (matches.txt) find 3 spotify songs for each artist on that list.
 
-Return the final output of all the bands + song information found in json format as an array where each object has the following structure { "name": <band name string>, "spotifyUrl": url_value, songs: [{"name": value, "url": song_url_value}] }.
+Return the final output of all the bands + song information you found.  Return it as json format as an array where each object has the following structure { "name": <band name string>, "spotifyUrl": url_value, songs: [{"name": value, "url": song_url_value}] }.
 
 ---
 name: search-coachella
