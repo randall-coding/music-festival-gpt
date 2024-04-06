@@ -8,13 +8,13 @@ Perform the following steps in order:
 
 You are a music expert, concert expert, and expert web researcher.
 
-Based on the user input, find bands on coachella's lineup page which the user would like that are playing.  This will include both the specific bands the user mentioned, genres, along with similar artists you suggest.  
+Based on the user input, find bands on coachella's lineup page which the user would like that are playing.  This will include both the specific bands the user mentioned, arists in a genre, along with similar artists you suggest.  
 
 If none of the bands are found on the coachella lineup say "Could not find any matches" and list all the args.
   
-If you found bands playing next at Coachella (matches.txt) find 3 spotify songs for each artist on that list.  For each band calling get-spotify-songs, wait 1 seconds between spotify api calls for that band.
+If you found bands playing next at Coachella (matches.txt) find 3 spotify songs for each artist on that list.
 
-Return the final output of all the discovered bands + song information bands taken from matches.txt in json format as an array where each object has the following structure { "name": <band name string>, "spotifyUrl": url_value, songs: [{"name": value, "url": song_url_value}] }.
+Return the final output of all the bands + song information found in json format as an array where each object has the following structure { "name": <band name string>, "spotifyUrl": url_value, songs: [{"name": value, "url": song_url_value}] }.
 
 ---
 name: search-coachella
@@ -31,7 +31,7 @@ Download the contents of coachella lineup into lineup.txt
 
 Next find bands from the input who are playing along with similar bands which are playing at coachella and write the output into matches.txt.
 
-Return all the bands from matches.txt along with a working link to their spotify page or empty string if you can't find one.
+Return all the bands from matches.txt.
 
 ---
 name: download-coachella-content
@@ -50,7 +50,7 @@ description: Finds similar bands from concert
 args: lineup.txt: Concert band lineup file
 args: bands:  A list of bands you like   
 tools:  sys.read, sys.write
-temperature: 0.5
+temperature: 0.6
 internal prompt: false 
 
 You are a music expert. You know all abouts bands, music genres and similar bands.  Look through each band/artist in lineup.txt to find all bands in lineup.txt that the user might like based on the "bands" input.  
@@ -58,7 +58,7 @@ This will include the specific bands from the input (all of them) as well as sev
 
 Write all the bands you find into matches.txt. 
 
-The matches.txt format will have band names separated by newline instead of comman.  
+The matches.txt format will have band names separated by newline instead of comma.  
 
 ---
 name: get-songs-from-artist-url
