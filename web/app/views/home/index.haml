@@ -20,7 +20,7 @@
   document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('searchForm').addEventListener('submit', function(e) {
       e.preventDefault();
-      document.getElementById('search-btn').remove();
+      document.getElementById('search-btn').disabled = true;
       document.querySelector('.loading-gif').style.display = 'flex';
       document.querySelector('.content').innerHTML = ''; 
       document.querySelector('.errors').innerHTML = '';
