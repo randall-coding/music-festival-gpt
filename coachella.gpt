@@ -77,5 +77,4 @@ args: numberOfSongs: number of songs to obtain per band or artist
 tools: ./spotify.yaml
 temperature: 0.2
 
-#For all bands in the list find 3 spotify song for each.  Name and url. For each band wait 2 second between each api call.
-For the band, find 3 spotify songs.  Name and url.
+For all bands in the list find 3 spotify song for each.  Name and url. For each band wait 1 second between each api call.
