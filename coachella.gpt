@@ -1,4 +1,4 @@
-tools: sys.read, sys.write, search-coachella, github.com/gptscript-ai/search/brave, sys.http.html2text?, get-songs-from-artist-url, 
+tools: sys.read, sys.write, search-coachella, sys.http.html2text?, get-spotify-songs
 #json_response true args for 
 args: bands: A list of bands you like.
 json response: true
@@ -12,16 +12,17 @@ Based on the user input, find bands on coachella's lineup page which the user wo
 
 If none of the bands are found on the coachella lineup say "Could not find any matches" and list all the args.
   
-If you found bands playing next at Coachella (matches.txt) return every band from matches.txt in json with format as an array where each object has the following structure { "name": value, "spotifyUrl": url_value, songs: [{"name": value, "url": song_url_value}] }.
+If you found bands playing next at Coachella (matches.txt) find 3 spotify songs for each artist on that list.  For each band to get-spotify-songs, wait 1 seconds between spotify api calls for that band.
 
-But before you output that, if you could not find songs for any artist, use search to find the correct link to their spotify by searching "Spotify artist ${band}" and trying again.  If you still can't find the spotify url, keep the band in the final output but songs will be [].
+Return the final output of all discovered band + song information in json format as an array where each object has the following structure { "name": <band name string>, "spotifyUrl": url_value, songs: [{"name": value, "url": song_url_value}] }.
+
 
 ---
 name: search-coachella
 description: Find bands you might like at coachella
 args: bands: A list of bands you like.
 #tools: download-coachella-content
-tools: sys.http.html2text?, sys.read, sys.write, github.com/gptscript-ai/search/brave, download-coachella-content, find-similar-bands
+tools: sys.http.html2text?, sys.read, sys.write, download-coachella-content, find-similar-bands
 
 Do the following in order:
 
@@ -31,13 +32,7 @@ Download the contents of coachella lineup into lineup.txt
 
 Next find similar bands which are playing at coachella and write the output into matches.txt.
 
-Return all the bands from matches.txt along with (optionally, but try for each) a working link to their spotify page.
-
-#---
-#name: download-coachella-content
-#description: Content of coachella lineup page
-
-# #!python3 coachella.py "https://www.coachella.com/lineup"
+Return all the bands from matches.txt along with a working link to their spotify page or empty string if you can't find one.
 
 ---
 name: download-coachella-content
@@ -60,7 +55,7 @@ temperature: 0.7
 internal prompt: false 
 
 You are a music expert. You know all abouts bands, music genres and similar bands.  Look through each band/artist in lineup.txt to find all bands in lineup.txt that the user might like based on the "bands" input.  
-This will include the specific bands from the input as well as several suggestions based on those band preferences. 
+This will include the specific bands from the input as well as several suggestions based on those band preferences or genres. 
 
 Write all the bands you find into matches.txt. 
 
@@ -76,6 +71,20 @@ args: wait_time: (optional) wait time in seconds to allow the page to load.  def
 #!python3 download-website-content.py "$url"
 
 ---
+name: find-spotifyurl-for-artists
+description: get spotify url for each music artist
+args: matches: List of artists
+args: url: url towards an artist
+tools: github.com/gptscript-ai/search/brave
+temperature: 0.2
+
+For each artist in the matches input try to find the spotify url and verify it is not a hallucination.
+
+Write the output into band-spotify.txt which will be in the format: "band"  "spotifyurl" \n
+
+#Ignore-> Before you output that, if you could not find songs for any artist, use search to find the correct link to their spotify by searching "Spotify artist ${band}" and trying again.  If you still can't find the spotify url, keep the band in the final output but songs will be [].
+
+---
 name: get-songs-from-artist-url
 description: get songs from url of spotify artist
 args: url: url towards an artist
@@ -83,3 +92,23 @@ tools: github.com/gptscript-ai/search/brave
 temperature: 0.2
 
 #!python3 songs.py "$url"
+
+
+#---
+#name: download-coachella-content
+#description: Content of coachella lineup page
+
+# #!python3 coachella.py "https://www.coachella.com/lineup"
+
+---
+
+---
+name: get-spotify-songs
+description: get songs for each artist or band
+args: band: a band
+args: numberOfSongs: number of songs to obtain per band or artist
+tools: ./spotify.yaml
+temperature: 0.2
+
+#For all bands in the list find 3 spotify song for each.  Name and url. For each band wait 2 second between each api call.
+For the band, find 3 spotify songs.  Name and url.
