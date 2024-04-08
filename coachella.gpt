@@ -14,7 +14,9 @@ If none of the bands are found on the coachella lineup say "Could not find any m
   
 If you found bands playing next at Coachella (matches.txt) find 3 spotify songs for each artist on that list.
 
-Return the final output of all the bands + song information you found.  Return it as json format as an array where each object has the following structure { "name": <band name string>, "spotifyUrl": url_value, songs: [{"name": value, "url": song_url_value}] }.
+The final output will be all the bands from matches.txt + song information you found.  Return it as json format as an array where each object has the following structure { "name": <band name string>, "spotifyUrl": url_value, songs: [{"name": value, "url": song_url_value}] }.
+
+Do not abridge the list or miss any.  Return the final output
 
 ---
 name: search-coachella
@@ -60,7 +62,7 @@ Write all the bands you find into matches.txt.
 
 The matches.txt format will have band names separated by newline instead of comma.  
 
----
+#---
 name: get-songs-from-artist-url
 description: get songs from url of spotify artist
 args: url: url towards an artist
@@ -72,9 +74,10 @@ temperature: 0.2
 ---
 name: get-spotify-songs
 description: get songs for each artist or band
-args: band: a band
+args: bands: a list of band
 args: numberOfSongs: number of songs to obtain per band or artist
-tools: ./spotify.yaml
+tools: search from ./spotify.yaml,get-an-artists-top-tracks from ./spotify.yaml
+#tools: ./spotify.yaml
 temperature: 0.2
 
 For all bands in the list find 3 spotify song for each.  Name and url. For each band wait 1 second between each api call.
