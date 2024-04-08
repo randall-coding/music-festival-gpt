@@ -1,11 +1,14 @@
 .container.mt-4
+  %h5.mb-3 Input bands (or genres) you like and we'll find artists you'll like playing at coachella.
   %form{action: "/", method: "get", id: 'searchForm'}
     .input-group.mb-3
       .input-group-prepend
         %button.input-group-text#search-btn{type: "submit"} Search
       %input.form-control{name: "input", type: "text", placeholder: "Tell us about bands you like...", value: params[:input]}  
-  %h4.mb-3 Bands you might like at coachella
+ 
   .content  
+    - if @bands     
+      %h4.content_title.mb-3 Bands you might like at coachella
     -# = "My bands count " + @bands&.count.to_s
     - @bands&.each do |band|
       = render "home/band", band: band
@@ -24,6 +27,7 @@
       document.querySelector('.loading-gif').style.display = 'flex';
       document.querySelector('.content').innerHTML = ''; 
       document.querySelector('.errors').innerHTML = '';
+      //document.querySelector('.content_title').innerHTML = 'Searching for bands at coachella.  Hold on!'
       this.submit(); 
     });
   });

@@ -17,10 +17,10 @@ class HomeController < ApplicationController
     if params[:input].present?
       Dir.chdir(File.dirname(folder_script_path)) do
         Rails.logger.info "Command is "
-        comnmand = "GPTSCRIPT_API_SPOTIFY_COM_BEARER_TOKEN=#{spotify_token} gptscript --cache" + " " + "coachella.gpt" + " " + params[:input]
-        Rails.logger.info {comnmand}
+        command = "GPTSCRIPT_API_SPOTIFY_COM_BEARER_TOKEN=#{spotify_token} gptscript" + " " + "coachella.gpt" + " " + params[:input]
+        Rails.logger.info {command}
 
-        stdout, stderr, status = Open3.capture3("GPTSCRIPT_API_SPOTIFY_COM_BEARER_TOKEN=#{spotify_token} gptscript --cache" + " " + "coachella.gpt" + " " + params[:input])        
+        stdout, stderr, status = Open3.capture3(command)        
         if status.success?          
           parsed_string = stdout.gsub("```json\n", "").gsub("\n```", "").strip
           json_output = JSON.parse(parsed_string)

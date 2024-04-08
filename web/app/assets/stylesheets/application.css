@@ -15,10 +15,9 @@
  */
 
  .loading-gif {
-  /* display: flex; */
   flex-direction: column;
   justify-content: center;
   justify-items: center;
-  align-items: start;
-  margin-left: 75px;
+  align-items: center;
+  /* margin-left: 75px; */
  }
