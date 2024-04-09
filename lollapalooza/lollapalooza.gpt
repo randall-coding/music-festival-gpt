@@ -1,0 +1,59 @@
+tools: search-lollapalooza, sys.find, sys.read, sys.write, github.com/gptscript-ai/search/brave, sys.http.html2text?, get-songs-from-artist-url
+
+Perform the following steps in order:
+
+You are a music expert, concert expert, and expert web researcher.
+
+Based on the user input, find bands on lollapalooza's lineup page which the user would like that are playing.  This can include the specific bands the user mentioned along with similar ones.  
+
+If none of the bands are found on the lollapalooza lineup say "Could not find any matches" and list all the args.
+
+If you found bands playing next at lollapalooza return all the data in json with format as an array where each object has the following structure { "name": value, "spotifyUrl": url_value, songs: [{"name": value, "url": song_url_value}] }.  Try to find songs for each, but if you can's leave it blank. 
+
+But before you output that, if you could not find songs for any artist, use search to find the correct link to their spotify by searching "Spotify artist ${band}" and trying again. 
+
+---
+name: search-lollapalooza
+description: Find bands you might like at coachella
+args: bands: A list of bands you like.
+tools: find-lollapalooza-lineup-image, sys.read, sys.write, github.com/gptscript-ai/vision, github.com/gptscript-ai/search/brave
+
+Do the following in order:
+
+Find lineup image in lollapalooza's lineup page
+
+Incase the image was saved, image named with website_lollapalooza in their name located in the current directory and put those extracted texts into a list.
+
+Write extracted texts to lollapalooza_lineup.txt
+
+Next search through lollapalooza_lineup.txt to find all bands or artists playing at lollapalooza that are also in the input.txt list AND bands which are similar to those (use your own LLM knowledge for that, not search) and write these bands into matches.txt file (create an actual file!). 
+
+#For any input band not found in matches output "No ${bandName} at lollapalooza" if it cannot be found. 
+
+Return all the bands from matches along with (optionally, but try for each) a working link to their spotify page.
+
+---
+name: find-lollapalooza-lineup-image
+description: Get image from lollapalooza's lineup page
+tools: download-website-image
+
+Download the billboard image from https://www.lollapalooza.com/lineup which has css class is hero-billboard-cms_poster-wrap, into website_lollapalooza.jpg file.
+
+In case you cannot download the image, print response
+
+---
+name: download-website-image
+description: used to download websites including those which render using javascript 
+args: url: url to download
+args: filename: (optional) filename to write website into.  default to "website.jpg"
+args: css_selector: (optional) class name to find in html
+
+#!python3 download-website-image.py "$url" "$filename" "$css_selector"
+
+---
+name: get-songs-from-artist-url
+description: get songs from url of spotify artist
+args: url: url towards an artist
+tools: github.com/gptscript-ai/search/brave
+
+#!python3 songs.py "$url"
