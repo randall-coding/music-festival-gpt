@@ -1,4 +1,4 @@
 .byebug_history
 lineup.txt
 matches.txt
-*.txt
+./*.txt
