@@ -1,0 +1,65 @@
+# OUTLINE
+When you get this all up, can you write a Tutorial on the strapi service teaching how you built it? I'd love to see it go live early next week.
+
+# Gptscript 
+GPTScript is a new scripting language to automate your interaction with a Large Language Model (LLM), namely OpenAI. The ultimate goal is to create a natural language programming experience. The syntax of GPTScript is largely natural language, making it very easy to learn and use. Natural language prompts can be mixed with traditional scripts such as bash and python or even external HTTP service calls. With GPTScript you can do just about anything, like plan a vacation, edit a file, run some SQL, or build a mongodb/flask app. Here are some common use cases for GPTScript:
+
+* MISSION 1 Downloading Coachella lineup website
+ - I first tried using sys.http.html2text? to capture the website like so using a subtool; 
+   <sub tool code> 
+   However since the lineup page uses javascript to asynchronously load the data, this tool did not work.
+
+ - I then created my own tool download-website-content which uses a simple python Selenium script
+  This worked, but the lineup page itself still loads ridiculously slowly (that's just a coachella.com problem)
+ 
+ - I looked for alternatives and found that pitchfork.com consistently lists the coachella lineup in an easily searchable text format.  To find the latest pitchfork.com page, I employed the brave search tool (link) to look for the latest pitckfork page using this prompt <general search prompt logic>.  
+   But I found that the search would be inconsistent with a general prompt like that.  To get a consistent search I needed to tell chatGPT exactly what to search for using the search tool like so <improved search logic>
+ 
+ 
+* MISSION 2  Obtaining the coachella lineup
+ -  Getting the lineup is as simple as <Take the pitchfork url you've found, visit the page and save all the bands playing at coachella in lineup.txt.  >.
+     But we need some tools to write to file.  If we type in `gptscript --list-tools` to our bash console, we will see the sys.write tool which allows us to right files on our local file system.  Declare the tool like so `tools: sys.write` at the top of your gpt file.
+     After that we run out script and find that lineup.txt is created and populated by a list of band names. Just like that and we barely had to write any logic ourselves, the heavy lifting was done by AI.
+     <show partial list of names>     
+
+* MISSION 3  Finding band recommendations from the lineup
+ -  First we'll need input from the user about bands or genres they like.  Let's just call that "bands".  
+    We'll declare the args for the main tool like so `args: bands: A list of bands you like.`
+ -  Next we need to read the contents of the file lineup.txt.  To do this we will invoke the sys.read tool. 
+    `tools: sys.read, sys.write ...`
+ -  I add the following prompt: 
+     "You are a music expert. You know all abouts bands, music genres and similar bands.  Look through each band/artist in lineup.txt to find all bands in lineup.txt that the user might like based on the user's input."
+    I then add to the prompt that it should write the bands it finds to matches.txt
+    I run the script and find if it only matches band names I put in exactly, with no suggestions.  
+-   Enter temperature <explain LLM temperature here concisely>.  gptscript defaults to 0 temperature which is very precise.  Let's fix that by changing it to 0.3.  
+    After running the script again I see matches.txt filled with a dozen bands and sometimes not the original bands input.  
+    A dozen bands might be more suggestions than we're looking for and we always at least would want exact bands we like to be mentioned if they are playing at coachella. Let's also add "This will include the specific bands from the input as well as several suggestions based on those band preferences." to make this more specific.
+   
+* MISSION 4 Obtaining songs from spotify
+  -  I created a short python script which can pull songs from <show song script> based on a spotify url.  Let's   simply rely on the LLM to tell us the spotify url and see how it works.   
+      
+  - Our first test run has some incorrect songs for No Doubt.  Those songs are for Franz Ferdinand.  Let's tighten this up.
+
+  - I discovered someone had already created a powerful gptscript tool for the spotify api.  gptscript integrates with OpenAPI format to create API tools for AI.  
+    For the spotify api we use the spotify.yaml binary and pull the tools we want from the binary.  
+    I implemented the spotify url using the following subtool
+    <show subtool logic> 
+    Everything looking good so far, here is the output.  
+    <output>
+    But when I check usage I see my usages rates are 10x higher than before.  The context tokens being used became 10x higher. It turns out the culprit is using the entire spotify.yaml all at once.  Instead let's just select the api calls we need from spotify.yaml.
+ 
+  To list the tools available in the spotify tool we run `gptscript --list-tools ./spotify.yaml`.  Let's select the "search" tool to find the spotify id of an artist and the "get-an-artists-top-tracks" tool to find songs for each artist.  
+    <output>  
+ Output is still successful and now there is a lot lower charge on openai.
+ 
+ * MISSION 5 consistency
+   - Everything is going well, except after 3 runs of the script chatGPT starts giving me back only a single output rather than one for each band in matches.  
+   -  After trying a few different fixes, I add the magic words "do not abridge the list" to the prompt regarding the final output.  It's strange since I'm already asking for "all bands from the list" so I shouldn't need to specify that.  But after adding that I was able to get 12 successful runs in a row showing several correct band suggestions.  Well that's good enough for me.  Hopefully it holds up for 100 or more runs.
+   
+* MISSION 6 deployment
+  - To deploy the app I created a simple rails web app.  I added the following code to make the script call and parse the returned json output: 
+    <code snippet> 
+  - And the end result looks like this 
+    < picture of website post query>
+    
+    
