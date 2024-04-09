@@ -1,4 +1,6 @@
 .byebug_history
 lineup.txt
 matches.txt
+input.txt
+band_spotify.txt
 ./*.txt
