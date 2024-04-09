@@ -1,0 +1,8 @@
+---
+name: download-website-content
+description: used to download websites including those which render using javascript 
+args: url: url to download
+args: filename: (optional) filename to write website into.  default to "website.txt"
+args: wait_time: (optional) wait time in seconds to allow the page to load.  default None.
+
+#!python3 download-website-content.py "$url"
