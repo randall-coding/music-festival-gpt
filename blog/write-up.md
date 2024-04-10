@@ -2,7 +2,7 @@
 
 GPTScript is a scripting language designed to automate interactions with OpenAI's language models. In this post, I'll share how I used it to create a useful tool for music enthusiasts. 
 
-This script will use Coachella's music festival lineup to make personalized band recommendations along with song samples from Spotify.  To skip ahead, the final script is [here])(blog/coachella/files)
+This script will use Coachella's music festival lineup to make personalized band recommendations along with song samples from Spotify.  To skip ahead, the final script is [here](blog/coachella/files)
 
 ### Install gptscript
 The first thing we need to do is follow these [instructions](https://github.com/gptscript-ai/gptscript) which will vary slightly depending on your operating system.  I'm running on Linux where the installation step is simple
