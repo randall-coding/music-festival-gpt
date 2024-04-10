@@ -25,7 +25,7 @@ Let's start by creating our first tool to capture the upcoming coachella lineup.
 
 Using coachella's official lineup page https://www.coachella.com/lineup I created a tool like this:
 
-*coachella.gpt*
+[*coachella.gpt*]
 ```
 ---
 name: download-coachella-content
@@ -38,7 +38,7 @@ Running this script with `gptscript coachella.gpt` doesn't produce any results. 
 
 Coachella loads its content dynamically, so we'll need a different solution.  We could create a python script that uses selenium, which I did [here](https://github.com/randall-coding/coachella-gpt/blob/master/download-website-content.py) but coachella's website has another problem of being slow and sometimes not returning data at all. So I found another website that publishes the Coachella lineup each year called pitchfork.com.  The new tool uses the brave search feature:
 
-*coachella.gpt*
+[*coachella.gpt*]
 ```
 ---
 name: download-coachella-content
@@ -58,7 +58,7 @@ We run this again with `gptscript coachella` and see a list of bands:
 What if we want to save the lineup and use it for later?  For that, we'll need to use the `sys.write` tool. 
 After we add the tool to our tools list we simply tell out script to write to a given filename as shown below:
 
-*coachella.gpt*
+[*coachella.gpt*]
 ```
 ---
 name: download-coachella-content
@@ -81,7 +81,7 @@ We'll declare the args for the main tool with `args: bands: A list of bands you 
 
 Next we need to read the contents of `lineup.txt`.  To do this we will invoke the `sys.read` tool.  As the name implies `sys.read` is for reading a file.
 
-*coachella.gpt*
+[*coachella.gpt*]
 ```
 ---
 name: find-similar-bands
@@ -103,7 +103,7 @@ That has only the exact bands we mentioned and no additional suggestions which i
 
 To solve this we'll introduce the concept of LLM **temperature**.  The temperature setting in large language models (LLMs) like GPT affects the model's output randomness. A low temperature (closer to 0) makes the model's responses more predictable and deterministic, whereas a higher temperature (closer to 1.0) leads to more varied and sometimes more creative responses. GPTscript defaults to 0 temperature, so we will set it to 0.3 to increase it and see what happens. 
 
-*coachella.gpt*
+[*coachella.gpt*]
 ```
 tools:  sys.read, sys.write
 temperature: 0.3
@@ -121,7 +121,7 @@ To fetch songs on Spotify I first created a simple Python script [songs.py](http
 
 We integrated that script into our get-spotify-songs tool like this:
 
-*coachella.gpt*
+[*coachella.gpt*]
 ```
 ---
 name: get-spotify-songs
@@ -145,7 +145,7 @@ For the Spotify api we use the pre-made [spotify.yaml](https://github.com/randal
 
 Now we update our tool `get-spotify-songs` like so:
 
-*coachella.gpt*
+[*coachella.gpt*]
 ```
 ---
 name: get-spotify-songs
@@ -177,7 +177,7 @@ After trying a few different fixes, I added the magic words *"do not abridge the
 
 Putting all the tools we made together, here is the final working script:
 
-*coachella.gpt*
+[*coachella.gpt*]
 ```
 tools: sys.read, sys.write, search-coachella, sys.http.html2text?, get-spotify-songs
 args: bands: A list of bands you like.
