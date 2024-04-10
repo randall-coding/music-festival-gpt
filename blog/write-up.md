@@ -166,9 +166,9 @@ Upon running this script, we see songs output for every band we found in `matche
 
 <output> 
 
-### Mission 5: Ensuring Reliable Outputs
+### Mission 5: Ensure Reliable Outputs
 
-After 3 runs of the script or so of the script ChatGPT starts returning only a single output rather than alls bands found in `matches.txt`.  
+After 3 runs of the script or so ChatGPT started returning only a single output rather than alls bands found in `matches.txt`.  
 
 <bad output>
   
