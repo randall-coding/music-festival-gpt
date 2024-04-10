@@ -55,7 +55,7 @@ We run this again with `gptscript coachella` and see a list of bands:
 
 Great!
 
-### Mission 2: Extracting the Lineup
+### Mission 2: Saving the Lineup
 
 What if we want to save the lineup and use it for later?  For that, we'll need to use the `sys.write` tool. 
 After we add the tool to our tools list we simply tell out script to write to a given filename as shown below:
