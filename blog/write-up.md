@@ -11,7 +11,11 @@ The first thing we need to do is follow these [instructions](https://github.com/
 
 I then set my OpenAI key to this environment variable:
 
-`export OPENAI_API_KEY="your-api-key"`
+`export OPENAI_API_KEY=your-api-key`
+
+For this work we will also need a variable for Brave Search token set:
+
+`export GPTSCRIPT_BRAVE_SEARCH_TOKEN=your-api-key`
 
 ### Mission 1: Capturing the Coachella Lineup
 
@@ -66,7 +70,7 @@ Search for the upcoming coachella lineup based on a specific year (either this y
 Take that url, visit the page and save all the bands playing at coachella in lineup.txt.  
 ```
 
-After running the script, voila, we find lineup.txt written with every band present.
+After running the script, voila, we find `lineup.txt` written with every band present.
 
 <output>
 
@@ -79,7 +83,6 @@ Next we need to read the contents of `lineup.txt`.  To do this we will invoke th
 
 *coachella.gpt*
 ```
-...
 ---
 name: find-similar-bands
 description: Finds similar bands from concert
@@ -106,7 +109,7 @@ tools:  sys.read, sys.write
 temperature: 0.3
 ```
 
-After running the script again I see matches.txt filled with bands.
+After running the script again I see `matches.txt` filled with bands.
 
 <output> 
 
@@ -118,55 +121,12 @@ Voila, on the next run we see a proper 7 bands output including our specific ban
 
 ### Mission 4: Fetching Songs from Spotify
 
-To fetch songs on Spotify I first created a simple Python script.
+To fetch songs on Spotify I first created a simple Python script [songs.py]().
 
-*songs.py*
-```
-import sys
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-
-# Get url
-url = sys.argv[1]
-
-# Setup WebDriver options
-options = webdriver.ChromeOptions()
-options.add_argument("--headless")
-options.add_argument("--no-sandbox")
-options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36")
-driver = webdriver.Chrome(options=options)
-
-# Navigate to the page and get field
-driver.get(url)
-try:
-    WebDriverWait(driver, 50).until(
-        EC.presence_of_element_located((By.CSS_SELECTOR, "div[data-testid='tracklist-row']"))
-    )
-
-    elements = driver.find_elements(By.CSS_SELECTOR, "div[data-testid='tracklist-row']")
-
-    songs = []
-    
-    for element in elements:
-      link_element = element.find_element(By.CSS_SELECTOR, "div:nth-child(2) > div:last-child > a")
-      song_name_element = element.find_element(By.CSS_SELECTOR, "div:nth-child(2) > div:last-child > a > div")
-      songs.append({ "url": link_element.get_attribute('href'), "name": song_name_element.text})
-
-    print(songs[0:3])
-except:
-    print("Error")
-finally:
-    driver.quit()
-
-```
-
-And we integrate that script into our get-spotify-songs tool like so:
+We integrated that script into our get-spotify-songs tool like this:
 
 *coachella.gpt*
 ```
-...
 ---
 name: get-spotify-songs
 description: get songs from url of spotify artist
@@ -189,7 +149,7 @@ Now we update our tool `get-spotify-songs` like so:
 
 *coachella.gpt*
 ```
-...
+
 ---
 name: get-spotify-songs
 description: get songs for each artist or band
@@ -202,26 +162,104 @@ internal prompt: false
 For all bands in the list find 3 spotify song for each.  Name and url. For each band wait 1 second between each api call.  Write the bands+songs output to band_spotify.txt file; create it if it doesn't exist.
 ```    
 
-Upon running this script, we see songs output for every band we found in matches.txt.  
+Upon running this script, we see songs output for every band we found in `matches.txt`.  
 
 <output> 
 
 ### Mission 5: Ensuring Reliable Outputs
 
-Now it seemed like everything is going well, but after 3 runs or so of the script ChatGPT starts returning only a single output rather than alls bands found in matches.txt.  
+After 3 runs of the script or so of the script ChatGPT starts returning only a single output rather than alls bands found in `matches.txt`.  
 
 <bad output>
   
-If matches.txt has 10 bands, I'm only getting back the first band.  This was strange to me as someone new to prompt engineering. 
+If `matches.txt` has 10 bands, I'm only getting back the first band.  This was strange to me as someone new to prompt engineering. 
 
 After trying a few different fixes, I add the magic words *do not abridge the list* to the prompt regarding the final output.  After adding this line, I was able to perform 12 successful runs in a row showing several correct band suggestions.  We'll call that reliable enough for now.
 
-### Mission 6: Launching the App
+### Mission 6: The final script
 
-To deploy the app I created a simple Rails web app, which calls the script and displays the results in a list form.
+Putting all the tools we made together, here is the final working script:
+
+**coachella.gpt**
+```
+tools: sys.read, sys.write, search-coachella, sys.http.html2text?, get-spotify-songs
+args: bands: A list of bands you like.
+json response: true
+temperature: 0.2
+
+Perform the following steps in order:
+
+You are a music expert, concert expert, and expert web researcher.
+
+Based on the user input, find bands on coachella's lineup page which the user would like that are playing.  This will include both the specific bands the user mentioned, arists in a genre, along with similar artists you suggest.  
+  
+If you found bands playing next at Coachella (matches.txt) find 3 spotify songs for each artist on that list.
+
+The final output will be all the bands+song information from band_spotify.txt you found.  Return it as json format as an array where each object has the following structure { "name": <band name string>, "spotifyUrl": url_value, songs: [{"name": value, "url": song_url_value}] }.
+
+Do not abridge the list or miss any!  Return the final output
+
+---
+name: search-coachella
+description: Find bands you might like at coachella
+args: bands: A list of bands you like.
+tools: sys.http.html2text?, sys.read, sys.write, download-coachella-content, find-similar-bands
+
+Do the following in order:
+
+Write down the input bands you've parsed from the input into input.txt file.
+
+Download the contents of coachella lineup into lineup.txt
+
+Next find bands from the input who are playing along with similar bands which are playing at coachella and write the output into matches.txt.
+
+Return all the bands from matches.txt.
+
+---
+name: download-coachella-content
+description: Downloads the content of coachella lineup page into file lineup.txt
+tools:  sys.http.html2text?, sys.read, sys.write, github.com/gptscript-ai/search/brave
+
+If lineup.txt already exists and is for the upcoming show (today's date is before the concert) then skip running tool and output "OK lineup.txt up to date".  Otherwise...
+
+Search for the upcoming coachella lineup based on a specific year (either this year or next year if we passed it) and find the pitchfork.com page for it.  Search should look like "coachella lineup site:pitchfork.com"
+
+Take that url, visit the page and save all the bands playing at coachella in lineup.txt.  
+
+---
+name: find-similar-bands
+description: Finds similar bands from concert
+args: lineup.txt: Concert band lineup file
+args: bands:  A list of bands you like   
+tools:  sys.read, sys.write
+temperature: 0.6
+internal prompt: false
+
+You are a music expert. You know all abouts bands, music genres and similar bands.  Look through each band/artist in lineup.txt to find all bands in lineup.txt that the user might like based on the "bands" input.  
+This will include the specific bands from the input (all of them) as well as several suggestions based on those band preferences or genres (no more than 3 similar bands if you found specific bands, and no more than 5 similar/genre based bands otherwise). 
+
+Write all the bands you find into matches.txt. 
+
+The matches.txt format will have band names separated by newline instead of comma and no more than 7 total.  
+
+---
+name: get-spotify-songs
+description: get songs for each artist or band
+args: bands: a list of band
+args: numberOfSongs: number of songs to obtain per band or artist
+tools: search from ./spotify.yaml,get-an-artists-top-tracks from ./spotify.yaml, sys.read, sys.write
+#tools: ./spotify.yaml
+temperature: 0.2
+internal prompt: false 
+
+For all bands in the list find 3 spotify song for each.  Name and url. Write the bands+songs output to band_spotify.txt file; create it if it doesn't exist.
+```
+
+### Mission 7: Launching the App
+
+To deploy the app I created a simple Rails web app which calls the script and displays the results in a list form.
 The end result looks like this:
 
 ![](picture_of_website_post_query)
 
-This project showed me how AI script integrations can simplify complex tasks and provide valuable services in an accessible way.  I will definitely be integrateing gptscript into my future workflows.
-
+AI script integrations can simplify complex tasks and provide valuable services in an accessible way.  I will definitely be integrateing gptscript into my future workflows.
