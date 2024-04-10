@@ -4,6 +4,8 @@ GPTScript is a scripting language designed to automate interactions with OpenAI'
 
 This script will use Coachella's music festival lineup to make personalized band recommendations along with song samples from Spotify.  To skip ahead, the final script is [here](blog/coachella/files)
 
+![render_input](https://github.com/randall-coding/coachella-gpt/assets/39175191/f64d06fa-fcac-4dc3-b2c8-d27640385708)
+
 ### Install gptscript
 The first thing we need to do is follow these [instructions](https://github.com/gptscript-ai/gptscript) which will vary slightly depending on your operating system.  I'm running on Linux where the installation step is simply:
 
@@ -260,6 +262,6 @@ For all bands in the list find 3 spotify song for each.  Name and url. Write the
 To deploy the app I created a simple Rails web app which calls the script and displays the results in a list form.
 The end result looks like this:
 
-![](picture_of_website_post_query)
+![render-good-run](https://github.com/randall-coding/coachella-gpt/assets/39175191/618e3495-6238-4991-a3d4-3daa777e1afd)
 
 AI script integrations can simplify complex tasks and provide valuable services in an accessible way.  I will definitely be integrateing gptscript into my future workflows.
