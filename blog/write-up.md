@@ -141,7 +141,7 @@ This appears to be a hallucination. Since we didn't specifically tell chatGPI ho
  
 Luckily, I discovered someone had already created a gptscript tool for the Spotify api ([credit to Grant Linville](https://github.com/g-linville)). 
 
-For the Spotify api we use the pre-made [spotify.yaml](https://github.com/randall-coding/coachella-gpt/blob/master/blog/coachella/spotify.yaml) file which contains the OpenAPI tool definition.  By declaring the tool like so `tools: ./spotify.yaml` we assume spotify.yaml is in the same folder as our coachella.gpt file.  This also requires us to OAuth into Spotify as details [here](https://github.com/randall-coding/coachella-gpt/blob/master/blog/coachella/spotify-oauth.md).
+For the Spotify api we use the pre-made [spotify.yaml](https://github.com/randall-coding/coachella-gpt/blob/master/blog/coachella/spotify.yaml) file which contains the OpenAPI tool definition. This also requires us to OAuth into Spotify as details [here](https://github.com/randall-coding/coachella-gpt/blob/master/blog/coachella/spotify-oauth.md).
 
 Now we update our tool `get-spotify-songs` like so:
 
