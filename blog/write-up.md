@@ -139,9 +139,9 @@ But when we run our script we see No Doubt's songs are for Franz Ferdinand!
 
 This appears to be a hallucination. Since we didn't specifically tell chatGPI how to find the artist's spotify artist pages, it just pulled from its training material.  This seems to not be the most reliable method for finding the spotify page.
  
-Luckily, I discovered someone had already created a gptscript tool for the Spotify api ([linked here]()). 
+Luckily, I discovered someone had already created a gptscript tool for the Spotify api ([credit to Grant Linville](https://github.com/g-linville)). 
 
-For the Spotify api we use the pre-made `spotify.yaml` file (credit to Grant Linville) which contains the OpenAPI tool definition.  By declaring the tool like so `tools: ./spotify.yaml` we assume spotify.yaml is in the same folder as our coachella.gpt file.  This also requires us to OAuth into Spotify as details [here]().
+For the Spotify api we use the pre-made `spotify.yaml` file ([linked here](https://github.com/randall-coding/coachella-gpt/blob/master/blog/coachella/spotify.yaml)) which contains the OpenAPI tool definition.  By declaring the tool like so `tools: ./spotify.yaml` we assume spotify.yaml is in the same folder as our coachella.gpt file.  This also requires us to OAuth into Spotify as details [here](https://github.com/randall-coding/coachella-gpt/blob/master/blog/coachella/spotify-oauth.md).
 
 Now we update our tool `get-spotify-songs` like so:
 
