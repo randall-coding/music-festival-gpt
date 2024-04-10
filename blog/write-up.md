@@ -81,18 +81,36 @@ We'll declare the args for the main tool with `args: bands: A list of bands you 
 
 Next we need to read the contents of `lineup.txt`.  To do this we will invoke the `sys.read` tool.  As the name implies `sys.read` is for reading a file.
 
+The main tool at the top of the script manages the smaller tools we've created.  Note that the main tool doesn't require a `name` parameter and is located at the top of the script.
+
 [*coachella.gpt*]
 ```
+description: "Make band suggestions at Coachella based on input"
+tools: download-coachella-content, find-similar-bands, sys.read, sys.write
+args: bands: A list of bands or genres of music you like
+
+Take in user input an output a list of the same + similar bands playing at coachella that the user might like.
+
 ---
 name: find-similar-bands
 description: Finds similar bands from concert
 args: lineup.txt: Concert band lineup file
-args: bands:  A list of bands you like   
+args: bands:   A list of bands or genres of music you like  
 tools:  sys.read, sys.write
 
 You are a music expert. You know all abouts bands, music genres and similar bands.  Look through each band/artist in lineup.txt to find all bands in lineup.txt that the user might like based on the "bands" input.  
 
 Write all the bands you find into matches.txt. 
+
+---
+name: download-coachella-content
+description: Downloads the content of coachella lineup page into file lineup.txt
+tools:  sys.http.html2text?, sys.write, github.com/gptscript-ai/search/brave
+
+Search for the upcoming coachella lineup based on a specific year (either this year or next year if we passed it) and find the pitchfork.com page for it.  The search should look like "coachella lineup site:pitchfork.com".
+
+Take that url, visit the page and save all the bands playing at coachella in lineup.txt.  
+
 ```
 
 After running the script we see this output:
