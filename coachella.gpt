@@ -12,7 +12,7 @@ Based on the user input, find bands on coachella's lineup page which the user wo
   
 If you found bands playing next at Coachella (matches.txt) find 3 spotify songs for each artist on that list.
 
-For the final output read  band_spotify.txt to find the bands+song information.  Return that information as json format as an array where each object has the following structure { "name": <band name string>, "spotifyUrl": url_value, songs: [{"name": value, "url": song_url_value}] }.
+For the final output read band_spotify.txt to find the bands+song information.  Return that information as json format as an array where each object has the following structure { "name": <band name string>, "spotifyUrl": url_value, songs: [{"name": value, "url": song_url_value}] }.
 
 Do not abridge the list or miss any!  Return the final output
 
@@ -61,13 +61,13 @@ Write all the bands you find into matches.txt.
 The matches.txt format will have band names separated by newline instead of comma and no more than 7 total.  
 
 #---
-name: get-songs-from-artist-url
-description: get songs from url of spotify artist
-args: url: spotify url for an artist
-tools: github.com/gptscript-ai/search/brave
-temperature: 0.2
+#name: get-songs-from-artist-url
+#description: get songs from url of spotify artist
+#args: url: spotify url for an artist
+#tools: github.com/gptscript-ai/search/brave
+#temperature: 0.2
 
-#!python3 songs.py "$url"
+##!python3 songs.py "$url"
 
 ---
 name: get-spotify-songs
