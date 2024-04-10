@@ -34,7 +34,7 @@ Visit the page "https://www.coachella.com/lineup" and pull all the names of upco
 
 Running this script with `gptscript coachella.gpt` doesn't produce any results.  What happened?
 
-Coachella loads its content dynamically, so we'll need a different solution.  We could create a python script that uses selenium, which I did [here](blog/coachella/download-website-content.py) but coachella's website has another problem of being really slow and sometimes not returning data at all. Eventually, I found another website that publishes the Coachella lineup each year called pitchfork.com.  So I focused my search there like so:
+Coachella loads its content dynamically, so we'll need a different solution.  We could create a python script that uses selenium, which I did [here](blog/coachella/download-website-content.py) but coachella's website has another problem of being slow and sometimes not returning data at all. So instead, I found another website that publishes the Coachella lineup each year called pitchfork.com.  The new tool uses the brave search feature:
 
 *coachella.gpt*
 ```
