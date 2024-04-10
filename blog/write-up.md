@@ -4,7 +4,7 @@ GPTScript is a scripting language designed to automate interactions with OpenAI'
 
 This script will use Coachella's music festival lineup to make personalized band recommendations along with song samples from Spotify.  To skip ahead, the final script is [here](blog/coachella/files)
 
-![render_input](https://github.com/randall-coding/coachella-gpt/assets/39175191/f64d06fa-fcac-4dc3-b2c8-d27640385708)
+![render_input](https://github.com/randall-coding/coachella-gpt/assets/39175191/1b768d71-3d3a-4791-91a2-3254967b239b)
 
 ### Install gptscript
 The first thing we need to do is follow these [instructions](https://github.com/gptscript-ai/gptscript) which will vary slightly depending on your operating system.  I'm running on Linux where the installation step is simply:
