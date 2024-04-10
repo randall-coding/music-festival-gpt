@@ -113,7 +113,7 @@ After running the script again I see `matches.txt` filled with bands.
 
 <output> 
 
-But I'm seeing about a dozen bands and sometimes not the original bands input. We always want at least the exact bands that match in addition to several suggestions (and not neceesarily a dozen).  Let's add this language to our prompt to make the output more specific *...This will include the specific bands from the input as well as several suggestions based on those band preferences.*
+But I'm seeing about a dozen bands and sometimes not the original bands input. We always want at least the exact bands that match in addition to several suggestions (and not neceesarily a dozen).  Let's add this language to our prompt to make the output more specific *"...This will include the specific bands from the input as well as several suggestions based on those band preferences."*
 
 <output>
 
@@ -174,7 +174,7 @@ After 3 runs of the script or so ChatGPT started returning only a single output 
   
 If `matches.txt` has 10 bands, I'm only getting back the first band.
 
-After trying a few different fixes, I added the magic words *do not abridge the list* to the prompt regarding the final output.  After adding this line, I was able to perform 12 successful runs in a row.  We'll call that reliable enough for now.
+After trying a few different fixes, I added the magic words *"do not abridge the list"* to the prompt regarding the final output.  After adding this line, I was able to perform 12 successful runs in a row.  We'll call that reliable enough for now.
 
 ### Mission 6: The final script
 
