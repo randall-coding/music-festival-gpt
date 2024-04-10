@@ -30,6 +30,7 @@ GPTScript is a new scripting language to automate your interaction with a Large 
  -  I add the following prompt: 
      "You are a music expert. You know all abouts bands, music genres and similar bands.  Look through each band/artist in lineup.txt to find all bands in lineup.txt that the user might like based on the user's input."
     I then add to the prompt that it should write the bands it finds to matches.txt
+    
     I run the script and find if it only matches band names I put in exactly, with no suggestions.  
 -   Enter temperature <explain LLM temperature here concisely>.  gptscript defaults to 0 temperature which is very precise.  Let's fix that by changing it to 0.3.  
     After running the script again I see matches.txt filled with a dozen bands and sometimes not the original bands input.  
