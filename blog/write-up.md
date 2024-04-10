@@ -261,4 +261,4 @@ The end result looks like this:
 
 The deployment is live [here](https://coachella-gpt.onrender.com) to try.  It takes a minute to get results right now, but optimizing our script will be the subject of our next blog.
 
-Nevertheless, this shows the power of AI integrations.  We didn't have to write a single api call or complex logic to find / compare similar bands.  I will definitely be integrateing GPTScript into my future workflows.
+Nevertheless, this shows the power of AI integrations.  We didn't have to write a single api call or complex logic to find / compare similar bands.  I will definitely be integrating GPTScript into my future workflows.
