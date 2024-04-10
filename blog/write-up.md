@@ -5,19 +5,19 @@ GPTScript is a scripting language designed to automate interactions with OpenAI'
 This script will use Coachella's music festival lineup to make personalized band recommendations along with song samples from Spotify.  To skip ahead, the final script is [here](blog/coachella/files)
 
 ### Install gptscript
-The first thing we need to do is follow these [instructions](https://github.com/gptscript-ai/gptscript) which will vary slightly depending on your operating system.  I'm running on Linux where the installation step is simple
+The first thing we need to do is follow these [instructions](https://github.com/gptscript-ai/gptscript) which will vary slightly depending on your operating system.  I'm running on Linux where the installation step is simply:
 
 `curl https://get.gptscript.ai/install.sh | sh` 
 
-I then set my openai key to this environment variable:
+I then set my OpenAI key to this environment variable:
 
 `export OPENAI_API_KEY="your-api-key"`
 
 ### Mission 1: Capturing the Coachella Lineup
 
-Let's start by creating our first tool to capture the upcoming coachella lineup.  The simplest way to capture a website is using the built in `sys.http.html2text?` tool.  As the name implies it converts an http request into text that chatGPT can process.  
+Let's start by creating our first tool to capture the upcoming coachella lineup.  The simplest way to capture a website with GPTscript is using the built in `sys.http.html2text?` tool.  As the name implies it converts an http request into text that ChatGPT can process.  
 
-Using coachella's official lineup page https://www.coachella.com/lineup I created a tool like so:
+Using coachella's official lineup page https://www.coachella.com/lineup I created a tool like this:
 
 *coachella.gpt*
 ```
@@ -30,9 +30,7 @@ Visit the page "https://www.coachella.com/lineup" and pull all the names of upco
 
 Running this script with `gptscript coachella.gpt` doesn't produce any results.  What happened?
 
-Coachella loads its content dynamically, so we'll need a different solution.  We could create a python script that uses selenium, which I did [here](blog/coachella/download-website-content.py) but coachella's website has another problem of being really slow.  I was waiting a full minute for the page to load (I use a vpn so your results may vary). 
-
-Eventually, I found that another website that consistently publishes the Coachella lineup, pitchfork.com.  So I focused my search there like so:
+Coachella loads its content dynamically, so we'll need a different solution.  We could create a python script that uses selenium, which I did [here](blog/coachella/download-website-content.py) but coachella's website has another problem of being really slow and sometimes not returning data at all. Eventually, I found another website that publishes the Coachella lineup each year called pitchfork.com.  So I focused my search there like so:
 
 *coachella.gpt*
 ```
@@ -41,7 +39,8 @@ name: download-coachella-content
 description: Downloads the content of coachella lineup page into file lineup.txt
 tools:  sys.http.html2text?, github.com/gptscript-ai/search/brave
 
-Search for the upcoming coachella lineup based on a specific year (either this year or next year if we passed it) and find the pitchfork.com page for it.  The search should look like "coachella lineup site:pitchfork.com".  Take that url, visit the page and output the bands you find to console
+Search for the upcoming coachella lineup based on a specific year (either this year or next year if we passed it) and find the pitchfork.com page for it.
+The search should look like "coachella lineup site:pitchfork.com".  Take that url, visit the page and output the bands you find to console
 ```
 
 We run this again with `gptscript coachella` and see a list of bands:
@@ -52,8 +51,8 @@ Great!
 
 ### Mission 2: Extracting the Lineup
 
-But what if we want to save this lineup and use it for later?  For that, we'll need to add the `sys.write` tool. 
-After adding the tool to our list we simply tell out script to write to a given filename.
+What if we want to save the lineup and use it for later?  For that, we'll need to use the `sys.write` tool. 
+After we add the tool to our tools list we simply tell out script to write to a given filename as shown below:
 
 *coachella.gpt*
 ```
@@ -73,12 +72,10 @@ After running the script, voila, we find lineup.txt written with every band pres
 
 ### Mission 3: Getting Band Recommendations
 
-First we'll need input from the user about bands or genres they like.  Let's just call that "bands". 
+First we'll need input from the user about bands or genres they like.  Let's just call that input "bands". 
 We'll declare the args for the main tool like so `args: bands: A list of bands you like.`
 
-Next we need to read the contents of the file lineup.txt.  To do this we will invoke the sys.read tool.  Just like sys.write, but sys.read is for reading a file that's already been written.
-
-After adding the apporpriate prompt we add input args to the main tool and also create a sub-tool to organize our script: 
+Next we need to read the contents of `lineup.txt`.  To do this we will invoke the `sys.read` tool.  As the name implies `sys.read` is for reading a file.
 
 *coachella.gpt*
 ```
@@ -95,13 +92,13 @@ You are a music expert. You know all abouts bands, music genres and similar band
 Write all the bands you find into matches.txt. 
 ```
 
-After running the script here is the output:
+After running the script we see this output:
 
 <output>
 
-Only one band and no additional suggestions.  That's not what we want.
+That has only one band and no additional suggestions which is not what we want.
 
-To solve this we'll introduce the concept of LLM temperature.  The "temperature" setting in large language models (LLMs) like GPT affects the model's output randomness. A low temperature (closer to 0) makes the model's responses more predictable and deterministic, whereas a higher temperature (close to 1.0) leads to more varied and sometimes more creative responses. We'll leverage this creativity to help chatGPT find more similar bands.  GPTscript defaults to 0 temperature, so we will set it to 0.3 to increase it. 
+To solve this we'll introduce the concept of LLM temperature.  The "temperature" setting in large language models (LLMs) like GPT affects the model's output randomness. A low temperature (closer to 0) makes the model's responses more predictable and deterministic, whereas a higher temperature (close to 1.0) leads to more varied and sometimes more creative responses. We'll leverage this creativity to help ChatGPT find more similar bands.  GPTscript defaults to 0 temperature, so we will set it to 0.3 to increase it. 
 
 *coachella.gpt*
 ```
@@ -207,7 +204,7 @@ Upon running this script, we see songs output for every band we found in matches
 
 ### Mission 5: Ensuring Reliable Outputs
 
-  Now it seemed like everything was going well, but after 3 runs or so of the script chatGPT starts giving me back only a single output rather than alls bands found in matches.txt.  If matches.txt has 10 bands, I'm only getting back the first band.  This was strange to me as someone new to prompt engineering. 
+  Now it seemed like everything was going well, but after 3 runs or so of the script ChatGPT starts giving me back only a single output rather than alls bands found in matches.txt.  If matches.txt has 10 bands, I'm only getting back the first band.  This was strange to me as someone new to prompt engineering. 
 
    After trying a few different fixes, I add the magic words "do not abridge the list" to the prompt regarding the final output.  After adding that line to the prompt, I was able to see 12 successful runs in a row showing several correct band suggestions.  Well that's good enough for me.  Hopefully it holds up for 100 or more runs.
 
