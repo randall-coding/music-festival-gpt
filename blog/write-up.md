@@ -98,21 +98,21 @@ After running the script we see this output:
 
 That has only one band and no additional suggestions which is not what we want.
 
-To solve this we'll introduce the concept of LLM temperature.  The "temperature" setting in large language models (LLMs) like GPT affects the model's output randomness. A low temperature (closer to 0) makes the model's responses more predictable and deterministic, whereas a higher temperature (close to 1.0) leads to more varied and sometimes more creative responses. We'll leverage this creativity to help ChatGPT find more similar bands.  GPTscript defaults to 0 temperature, so we will set it to 0.3 to increase it. 
+To solve this we'll introduce the concept of LLM **temperature**.  The temperature setting in large language models (LLMs) like GPT affects the model's output randomness. A low temperature (closer to 0) makes the model's responses more predictable and deterministic, whereas a higher temperature (closer to 1.0) leads to more varied and sometimes more creative responses. GPTscript defaults to 0 temperature, so we will set it to 0.3 to increase it and see what happens. 
 
 *coachella.gpt*
 ```
-...
 tools:  sys.read, sys.write
 temperature: 0.3
-...
 ```
 
 After running the script again I see matches.txt filled with bands.
 
 <output> 
 
-I'm seeing about a dozen bands and sometimes not the original bands input. But we always want at least the exact bands that match in addition to several suggestions (and not neceesarily a dozen).  Let's add this language to our prompt to make the output more specific "...This will include the specific bands from the input as well as several suggestions based on those band preferences."
+But I'm seeing about a dozen bands and sometimes not the original bands input. We always want at least the exact bands that match in addition to several suggestions (and not neceesarily a dozen).  Let's add this language to our prompt to make the output more specific *...This will include the specific bands from the input as well as several suggestions based on those band preferences.*
+
+<output>
 
 Voila, on the next run we see a proper 7 bands output including our specific bands of choice.
 
@@ -162,6 +162,8 @@ finally:
 
 ```
 
+And we integrate that script into our get-spotify-songs tool like so:
+
 *coachella.gpt*
 ```
 ...
@@ -177,13 +179,13 @@ temperature: 0.2
 
 <output Franz Ferdinand?> 
 
-When we run our script we see No Doubt's songs are for Franz Ferdinand!  This appears to be a hallucination. Since we didn't specifically tell chatGPI how to find the artist's spotify artist pages, it just pulled from its LLM memory.  This is not the most reliable method for finding the url.
+When we run our script we see No Doubt's songs are for Franz Ferdinand!  This appears to be a hallucination. Since we didn't specifically tell chatGPI how to find the artist's spotify artist pages, it just pulled from its training material.  This seems to not be the most reliable method for finding the spotify page.
  
-Luckily, I discovered someone had already created a great gptscript tool for the spotify api ([linked here]()). 
+Luckily, I discovered someone had already created a great gptscript tool for the Spotify api ([linked here]()). 
 
-For the spotify api we use the pre-made spotify.yaml file which contains the OpenAPI tool definition.  By declaring the tool like so `tools: ./spotify.yaml` we assume spotify.yaml is in the same folder as our coachella.gpt file.
+For the Spotify api we use the pre-made `spotify.yaml` file (credit to Grant Linville) which contains the OpenAPI tool definition.  By declaring the tool like so `tools: ./spotify.yaml` we assume spotify.yaml is in the same folder as our coachella.gpt file.
 
-Using this new tool we can update our sub tool 'get-spotify-songs'
+Now we update our tool `get-spotify-songs` like so:
 
 *coachella.gpt*
 ```
@@ -202,11 +204,17 @@ For all bands in the list find 3 spotify song for each.  Name and url. For each 
 
 Upon running this script, we see songs output for every band we found in matches.txt.  
 
+<output> 
+
 ### Mission 5: Ensuring Reliable Outputs
 
-  Now it seemed like everything was going well, but after 3 runs or so of the script ChatGPT starts giving me back only a single output rather than alls bands found in matches.txt.  If matches.txt has 10 bands, I'm only getting back the first band.  This was strange to me as someone new to prompt engineering. 
+Now it seemed like everything is going well, but after 3 runs or so of the script ChatGPT starts returning only a single output rather than alls bands found in matches.txt.  
 
-   After trying a few different fixes, I add the magic words "do not abridge the list" to the prompt regarding the final output.  After adding that line to the prompt, I was able to see 12 successful runs in a row showing several correct band suggestions.  Well that's good enough for me.  Hopefully it holds up for 100 or more runs.
+<bad output>
+  
+If matches.txt has 10 bands, I'm only getting back the first band.  This was strange to me as someone new to prompt engineering. 
+
+After trying a few different fixes, I add the magic words *do not abridge the list* to the prompt regarding the final output.  After adding this line, I was able to perform 12 successful runs in a row showing several correct band suggestions.  We'll call that reliable enough for now.
 
 ### Mission 6: Launching the App
 
