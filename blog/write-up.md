@@ -257,6 +257,6 @@ For all bands in the list find 3 spotify song for each.  Name and url. Write the
 To deploy the app I created a simple Rails [web app](https://github.com/randall-coding/coachella-gpt/tree/master/web) which calls the script and displays the results in a list form.
 The end result looks like this:
 
-![render-good-run](https://github.com/randall-coding/coachella-gpt/assets/39175191/618e3495-6238-4991-a3d4-3daa777e1afd)
+![good_results_2](https://github.com/randall-coding/coachella-gpt/assets/39175191/73cb38fe-459e-4b49-ba8e-22f0345e5766)
 
 This shows the power of AI integrations.  We didn't have to write a single api call or complex logic to find / compare similar bands.  I will definitely be integrateing GPTScript into my future workflows.
