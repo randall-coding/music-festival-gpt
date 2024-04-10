@@ -1,23 +1,25 @@
-# Coachella Recommendations with GPTScript
+# Coachella band finder with GPTScript
 
 GPTScript is a scripting language designed to automate interactions with OpenAI's language models. In this post, I'll share how I used it to create a useful tool for music enthusiasts. 
 
-This script will use Coachella music festival lineup to make personalized band recommendations along with song samples from Spotify so the user can see if they like that band's sound.  Must be a lot of work right?  Well, not so much once you know how to use GPTScript.
+This script will use Coachella's music festival lineup to make personalized band recommendations along with song samples from Spotify.  It must be a lot of work right?  Well, not so much once you know how to use GPTScript.
 
-Skip ahead by viewing the the final script [here])(blog/coachella/files)
+If you're impatient skip ahead by viewing the the final script [here])(blog/coachella/files)
 
 ### Install gptscript cli
 The first thing we need to do is follow these [instructions](https://github.com/gptscript-ai/gptscript) which will vary slightly depending on your operating system.  I'm running on Linux where the installation step is simple
 
 `curl https://get.gptscript.ai/install.sh | sh` 
 
-Then I set my openai key to this environment variable:
+I then set my openai key to this environment variable:
 
 `export OPENAI_API_KEY="your-api-key"`
 
 ### Mission 1: Capturing the Coachella Lineup
 
-Let's start by creating our first tool to capture the upcoming coachella lineup.  The simplest way to capture a website is using the built in sys.http.html2text? tool.  As the name implies it converts an http request into text that chatGPT can process.  I found coachella's official lineup page https://www.coachella.com/lineup and created a tool like so:
+Let's start by creating our first tool to capture the upcoming coachella lineup.  The simplest way to capture a website is using the built in `sys.http.html2text?` tool.  As the name implies it converts an http request into text that chatGPT can process.  
+
+Using coachella's official lineup page https://www.coachella.com/lineup I created a tool like so:
 
 coachella.gpt
 ```
