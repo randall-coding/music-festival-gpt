@@ -50,8 +50,8 @@ description: Finds similar bands from concert
 args: lineup.txt: Concert band lineup file
 args: bands:  A list of bands you like   
 tools:  sys.read, sys.write
-temperature: 0.6
-internal prompt: false 
+temperature: 0.3
+internal prompt: false
 
 You are a music expert. You know all abouts bands, music genres and similar bands.  Look through each band/artist in lineup.txt to find all bands in lineup.txt that the user might like based on the "bands" input.  
 This will include the specific bands from the input (all of them) as well as several suggestions based on those band preferences or genres (no more than 3 similar bands if you found specific bands, and no more than 5 similar/genre based bands otherwise). 
@@ -63,7 +63,7 @@ The matches.txt format will have band names separated by newline instead of comm
 #---
 name: get-songs-from-artist-url
 description: get songs from url of spotify artist
-args: url: url towards an artist
+args: url: spotify url for an artist
 tools: github.com/gptscript-ai/search/brave
 temperature: 0.2
 
