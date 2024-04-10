@@ -19,7 +19,7 @@ For this work we will also need a variable for Brave Search token set:
 
 `export GPTSCRIPT_BRAVE_SEARCH_TOKEN=your-api-key`
 
-### Mission 1: Capturing the Coachella Lineup
+## Mission 1: Capturing the Coachella Lineup
 
 Let's start by creating our first tool to capture the upcoming coachella lineup.  The simplest way to capture a website with GPTscript is using the built in `sys.http.html2text?` tool.  As the name implies it converts an http request into text that ChatGPT can process.  
 
@@ -53,7 +53,7 @@ We run this again with `gptscript coachella` and see a list of bands:
 
 ![output_lineup_only](https://github.com/randall-coding/coachella-gpt/assets/39175191/98a712fa-1a60-4aae-8f09-c0b8d634fc90)
 
-### Mission 2: Saving the Lineup
+## Mission 2: Saving the Lineup
 
 What if we want to save the lineup and use it for later?  For that, we'll need to use the `sys.write` tool. 
 After we add the tool to our tools list we simply tell out script to write to a given filename as shown below:
@@ -74,7 +74,7 @@ After running the script, voila, we find `lineup.txt` written with every band pr
 
 ![lineup_file_img](https://github.com/randall-coding/coachella-gpt/assets/39175191/ccc5d4db-6673-4df7-a788-9a081cefdb3f)
 
-### Mission 3: Getting Band Recommendations
+## Mission 3: Getting Band Recommendations
 
 First we'll need input from the user about bands or genres they like.  Let's just call that input "bands". 
 We'll declare the args for the main tool with `args: bands: A list of bands you like.`
@@ -115,7 +115,7 @@ After running the script again I see `matches.txt` filled with bands.
 
 Better!  But now I'm seeing about a dozen bands and sometimes not the original bands input. We always want at least the exact bands that match in addition to several suggestions (and not neceesarily a dozen).  Let's add this language to our prompt to make the output more specific *"...This will include the specific bands from the input as well as several suggestions based on those band preferences."*
 
-### Mission 4: Fetching Songs from Spotify
+## Mission 4: Fetching Songs from Spotify
 
 To fetch songs on Spotify I first created a simple Python script [songs.py](https://github.com/randall-coding/coachella-gpt/blob/master/songs.py).
 
@@ -163,7 +163,7 @@ Upon running this script, we see songs output for every band we found in `matche
 
 ![matches_txt_good](https://github.com/randall-coding/coachella-gpt/assets/39175191/c9c8a301-02a0-46e4-b795-d8f4569c15c9)
 
-### Mission 5: Ensure Reliable Outputs
+## Mission 5: Ensure Reliable Outputs
 
 After 3 runs of the script or so ChatGPT started returning only a single output rather than alls bands found in `matches.txt`.  
 
@@ -173,7 +173,7 @@ If `matches.txt` has 10 bands, I'm only getting back the first band.
 
 After trying a few different fixes, I added the magic words *"do not abridge the list"* to the prompt regarding the final output.  After adding this line, I was able to perform 12 successful runs in a row.  We'll call that reliable enough for now.
 
-### Mission 6: The final script
+## Mission 6: The final script
 
 Putting all the tools we made together, here is the final working script:
 
@@ -252,7 +252,7 @@ internal prompt: false
 For all bands in the list find 3 spotify song for each.  Name and url. Write the bands+songs output to band_spotify.txt file; create it if it doesn't exist.
 ```
 
-### Mission 7: Launching the App
+## Mission 7: Launching the App
 
 To deploy the app I created a simple Rails [web app](https://github.com/randall-coding/coachella-gpt/tree/master/web) which calls the script and displays the results in a list form.
 The end result looks like this:
