@@ -259,4 +259,6 @@ The end result looks like this:
 
 ![good_results_2](https://github.com/randall-coding/coachella-gpt/assets/39175191/73cb38fe-459e-4b49-ba8e-22f0345e5766)
 
-This shows the power of AI integrations.  We didn't have to write a single api call or complex logic to find / compare similar bands.  I will definitely be integrateing GPTScript into my future workflows.
+The deployment is live [here](https://coachella-gpt.onrender.com) to try.  It takes a minute to get results right now, but optimizing our script will be the subject of our next blog.
+
+Nevertheless, this shows the power of AI integrations.  We didn't have to write a single api call or complex logic to find / compare similar bands.  I will definitely be integrateing GPTScript into my future workflows.
