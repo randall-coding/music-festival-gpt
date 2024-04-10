@@ -8,11 +8,11 @@ Perform the following steps in order:
 
 You are a music expert, concert expert, and expert web researcher.
 
-Based on the user input, find bands on coachella's lineup page which the user would like that are playing.  This will include both the specific bands the user mentioned, arists in a genre, along with similar artists you suggest.  
+Based on the user input, find bands on coachella's lineup page which the user would like that are playing.  This will include both the specific bands the user mentioned, arists in a genre, along with similar artists you suggest.
   
 If you found bands playing next at Coachella (matches.txt) find 3 spotify songs for each artist on that list.
 
-The final output will be all the bands+song information from band_spotify.txt you found.  Return it as json format as an array where each object has the following structure { "name": <band name string>, "spotifyUrl": url_value, songs: [{"name": value, "url": song_url_value}] }.
+For the final output read  band_spotify.txt to find the bands+song information.  Return that information as json format as an array where each object has the following structure { "name": <band name string>, "spotifyUrl": url_value, songs: [{"name": value, "url": song_url_value}] }.
 
 Do not abridge the list or miss any!  Return the final output
 
@@ -29,7 +29,7 @@ Write down the input bands you've parsed from the input into input.txt file.
 
 Download the contents of coachella lineup into lineup.txt
 
-Next find bands from the input who are playing along with similar bands which are playing at coachella and write the output into matches.txt.
+Next find bands from the input who are playing at coachella along with similar bands which are playing at coachella and write the output into matches.txt.
 
 Return all the bands from matches.txt.
 
