@@ -15,7 +15,7 @@ I then set my OpenAI key to this environment variable:
 
 `export OPENAI_API_KEY=your-api-key`
 
-For this work we will also need a variable for Brave Search token set:
+We will also need a variable for Brave Search token set for the search tool:
 
 `export GPTSCRIPT_BRAVE_SEARCH_TOKEN=your-api-key`
 
