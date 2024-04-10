@@ -19,7 +19,7 @@ Let's start by creating our first tool to capture the upcoming coachella lineup.
 
 Using coachella's official lineup page https://www.coachella.com/lineup I created a tool like so:
 
-coachella.gpt
+[coachella.gpt]
 ```
 ---
 name: download-coachella-content
