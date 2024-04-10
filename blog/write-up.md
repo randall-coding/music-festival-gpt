@@ -36,7 +36,7 @@ Visit the page "https://www.coachella.com/lineup" and pull all the names of upco
 
 Running this script with `gptscript coachella.gpt` doesn't produce any results.  What happened?
 
-Coachella loads its content dynamically, so we'll need a different solution.  We could create a python script that uses selenium, which I did [here](blog/coachella/download-website-content.py) but coachella's website has another problem of being slow and sometimes not returning data at all. So instead, I found another website that publishes the Coachella lineup each year called pitchfork.com.  The new tool uses the brave search feature:
+Coachella loads its content dynamically, so we'll need a different solution.  We could create a python script that uses selenium, which I did [here](https://github.com/randall-coding/coachella-gpt/blog/coachella/download-website-content.py) but coachella's website has another problem of being slow and sometimes not returning data at all. So instead, I found another website that publishes the Coachella lineup each year called pitchfork.com.  The new tool uses the brave search feature:
 
 *coachella.gpt*
 ```
@@ -117,7 +117,7 @@ Better!  But now I'm seeing about a dozen bands and sometimes not the original b
 
 ### Mission 4: Fetching Songs from Spotify
 
-To fetch songs on Spotify I first created a simple Python script [songs.py]().
+To fetch songs on Spotify I first created a simple Python script [songs.py](https://github.com/randall-coding/coachella-gpt/blob/master/songs.py).
 
 We integrated that script into our get-spotify-songs tool like this:
 
@@ -254,7 +254,7 @@ For all bands in the list find 3 spotify song for each.  Name and url. Write the
 
 ### Mission 7: Launching the App
 
-To deploy the app I created a simple Rails [web app]() which calls the script and displays the results in a list form.
+To deploy the app I created a simple Rails [web app](https://github.com/randall-coding/coachella-gpt/tree/master/web) which calls the script and displays the results in a list form.
 The end result looks like this:
 
 ![render-good-run](https://github.com/randall-coding/coachella-gpt/assets/39175191/618e3495-6238-4991-a3d4-3daa777e1afd)
