@@ -1,4 +1,4 @@
-# Coachella Artist Recommendations with GPTScript
+# Coachella Recommendations with GPTScript
 
 GPTScript is a scripting language designed to automate interactions with OpenAI's language models. In this post, I'll share how I used it to create a useful tool for music enthusiasts. This script will use Coachella music festival lineup to make personalized band recommendations along with song samples from Spotify so the user can see if they like that band's sound.  Must be a lot of work right?  Well, not so much once you know how to use GPTScript.
 
