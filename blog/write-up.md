@@ -138,8 +138,7 @@ temperature: 0.2
 
 #!python3 songs.py "$url"
 ```
-
-<output Franz Ferdinand?> 
+![franz_ferdinand_small](https://github.com/randall-coding/coachella-gpt/assets/39175191/2197a400-6b13-4f9a-851a-0f9243814917)
 
 When we run our script we see No Doubt's songs are for Franz Ferdinand!  This appears to be a hallucination. Since we didn't specifically tell chatGPI how to find the artist's spotify artist pages, it just pulled from its training material.  This seems to not be the most reliable method for finding the spotify page.
  
@@ -166,14 +165,14 @@ For all bands in the list find 3 spotify song for each.  Name and url. For each 
 
 Upon running this script, we see songs output for every band we found in `matches.txt`.  
 
-<output> 
+![matches_txt_good](https://github.com/randall-coding/coachella-gpt/assets/39175191/c9c8a301-02a0-46e4-b795-d8f4569c15c9)
 
 ### Mission 5: Ensure Reliable Outputs
 
 After 3 runs of the script or so ChatGPT started returning only a single output rather than alls bands found in `matches.txt`.  
 
-<bad output>
-  
+![single_output_error_console](https://github.com/randall-coding/coachella-gpt/assets/39175191/d072bea5-8c2a-4a47-bb95-ec2a77e20261)
+ 
 If `matches.txt` has 10 bands, I'm only getting back the first band.
 
 After trying a few different fixes, I added the magic words *"do not abridge the list"* to the prompt regarding the final output.  After adding this line, I was able to perform 12 successful runs in a row.  We'll call that reliable enough for now.
@@ -259,7 +258,7 @@ For all bands in the list find 3 spotify song for each.  Name and url. Write the
 
 ### Mission 7: Launching the App
 
-To deploy the app I created a simple Rails web app which calls the script and displays the results in a list form.
+To deploy the app I created a simple Rails [web app]() which calls the script and displays the results in a list form.
 The end result looks like this:
 
 ![render-good-run](https://github.com/randall-coding/coachella-gpt/assets/39175191/618e3495-6238-4991-a3d4-3daa777e1afd)
