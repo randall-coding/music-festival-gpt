@@ -99,9 +99,9 @@ Write all the bands you find into matches.txt.
 
 After running the script we see this output:
 
-<output>
+![similar-exact-bands-only](https://github.com/randall-coding/coachella-gpt/assets/39175191/1496da7f-1f1a-4798-baf0-7544398a5bb5)
 
-That has only one band and no additional suggestions which is not what we want.
+That has only the exact bands we mentioned and no additional suggestions which is not what we want.
 
 To solve this we'll introduce the concept of LLM **temperature**.  The temperature setting in large language models (LLMs) like GPT affects the model's output randomness. A low temperature (closer to 0) makes the model's responses more predictable and deterministic, whereas a higher temperature (closer to 1.0) leads to more varied and sometimes more creative responses. GPTscript defaults to 0 temperature, so we will set it to 0.3 to increase it and see what happens. 
 
@@ -113,13 +113,9 @@ temperature: 0.3
 
 After running the script again I see `matches.txt` filled with bands.
 
-<output> 
+![longer_matches_console_output](https://github.com/randall-coding/coachella-gpt/assets/39175191/e1d1bbdf-a613-44be-9d04-dd750ab9da6c)
 
-But I'm seeing about a dozen bands and sometimes not the original bands input. We always want at least the exact bands that match in addition to several suggestions (and not neceesarily a dozen).  Let's add this language to our prompt to make the output more specific *"...This will include the specific bands from the input as well as several suggestions based on those band preferences."*
-
-<output>
-
-Voila, on the next run we see a proper 7 bands output including our specific bands of choice.
+Better!  But now I'm seeing about a dozen bands and sometimes not the original bands input. We always want at least the exact bands that match in addition to several suggestions (and not neceesarily a dozen).  Let's add this language to our prompt to make the output more specific *"...This will include the specific bands from the input as well as several suggestions based on those band preferences."*
 
 ### Mission 4: Fetching Songs from Spotify
 
