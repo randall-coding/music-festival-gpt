@@ -81,7 +81,7 @@ We'll declare the args for the main tool with `args: bands: A list of bands you 
 
 Next we need to read the contents of `lineup.txt`.  To do this we will invoke the `sys.read` tool.  As the name implies `sys.read` is for reading a file.
 
-The main tool at the top of the script manages the smaller tools we've created.  Note that the main tool doesn't require a `name` parameter and is located at the top of the script.
+The main tool at the top of the script manages the smaller tools we've created.  Note that the main tool doesn't require a `name` parameter.
 
 [*coachella.gpt*]
 ```
