@@ -19,7 +19,7 @@ Let's start by creating our first tool to capture the upcoming coachella lineup.
 
 Using coachella's official lineup page https://www.coachella.com/lineup I created a tool like so:
 
-[coachella.gpt]
+*coachella.gpt*
 ```
 ---
 name: download-coachella-content
@@ -34,7 +34,7 @@ Coachella loads its content dynamically, so we'll need a different solution.  We
 
 Eventually, I found that another website that consistently publishes the Coachella lineup, pitchfork.com.  So I focused my search there like so:
 
-coachella.gpt
+*coachella.gpt*
 ```
 ---
 name: download-coachella-content
@@ -55,6 +55,7 @@ Great!
 But what if we want to save this lineup and use it for later?  For that, we'll need to add the `sys.write` tool. 
 After adding the tool to our list we simply tell out script to write to a given filename.
 
+*coachella.gpt*
 ```
 ---
 name: download-coachella-content
@@ -79,7 +80,7 @@ Next we need to read the contents of the file lineup.txt.  To do this we will in
 
 After adding the apporpriate prompt we add input args to the main tool and also create a sub-tool to organize our script: 
 
-coachella.gpt
+*coachella.gpt*
 ```
 ...
 ---
@@ -102,7 +103,7 @@ Only one band and no additional suggestions.  That's not what we want.
 
 To solve this we'll introduce the concept of LLM temperature.  The "temperature" setting in large language models (LLMs) like GPT affects the model's output randomness. A low temperature (closer to 0) makes the model's responses more predictable and deterministic, whereas a higher temperature (close to 1.0) leads to more varied and sometimes more creative responses. We'll leverage this creativity to help chatGPT find more similar bands.  GPTscript defaults to 0 temperature, so we will set it to 0.3 to increase it. 
 
-coachella.gpt
+*coachella.gpt*
 ```
 ...
 tools:  sys.read, sys.write
@@ -122,7 +123,7 @@ Voila, on the next run we see a proper 7 bands output including our specific ban
 
 To fetch songs on Spotify I first created a simple Python script.
 
-songs.py
+*songs.py*
 ```
 import sys
 from selenium import webdriver
@@ -164,7 +165,7 @@ finally:
 
 ```
 
-coachella.gpt
+*coachella.gpt*
 ```
 ...
 ---
@@ -187,7 +188,7 @@ For the spotify api we use the pre-made spotify.yaml file which contains the Ope
 
 Using this new tool we can update our sub tool 'get-spotify-songs'
 
-coachella.gpt
+*coachella.gpt*
 ```
 ...
 ---
