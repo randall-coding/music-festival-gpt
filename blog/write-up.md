@@ -172,15 +172,15 @@ After 3 runs of the script or so ChatGPT started returning only a single output 
 
 <bad output>
   
-If `matches.txt` has 10 bands, I'm only getting back the first band.  This was strange to me as someone new to prompt engineering. 
+If `matches.txt` has 10 bands, I'm only getting back the first band.
 
-After trying a few different fixes, I add the magic words *do not abridge the list* to the prompt regarding the final output.  After adding this line, I was able to perform 12 successful runs in a row showing several correct band suggestions.  We'll call that reliable enough for now.
+After trying a few different fixes, I added the magic words *do not abridge the list* to the prompt regarding the final output.  After adding this line, I was able to perform 12 successful runs in a row.  We'll call that reliable enough for now.
 
 ### Mission 6: The final script
 
 Putting all the tools we made together, here is the final working script:
 
-**coachella.gpt**
+*coachella.gpt*
 ```
 tools: sys.read, sys.write, search-coachella, sys.http.html2text?, get-spotify-songs
 args: bands: A list of bands you like.
