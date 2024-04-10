@@ -113,13 +113,13 @@ After running the script again I see `matches.txt` filled with bands.
 
 ![longer_matches_console_output](https://github.com/randall-coding/coachella-gpt/assets/39175191/e1d1bbdf-a613-44be-9d04-dd750ab9da6c)
 
-Better!  But now I'm seeing about a dozen bands and sometimes not the original bands input. We always want at least the exact bands that match in addition to several suggestions (and not neceesarily a dozen).  Let's add this language to our prompt to make the output more specific *"...This will include the specific bands from the input as well as several suggestions based on those band preferences."*
+Better!  But now I'm seeing about a dozen bands and sometimes not the original bands input. We always want at least the exact bands that match in addition to several suggestions (and not neceesarily a dozen).  Let's add some language to our prompt to make the output more specific *"...This will include the specific bands from the input as well as several suggestions based on those band preferences."*
 
 ## Mission 4: Fetching Songs from Spotify
 
 To fetch songs on Spotify I first created a simple Python script [songs.py](https://github.com/randall-coding/coachella-gpt/blob/master/songs.py).
 
-We integrated that script into our get-spotify-songs tool like this:
+Then I integrated the script into the get-spotify-songs tool like this:
 
 [*coachella.gpt*]
 ```
