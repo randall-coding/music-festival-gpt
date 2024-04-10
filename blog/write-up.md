@@ -51,7 +51,7 @@ The search should look like "coachella lineup site:pitchfork.com".  Take that ur
 
 We run this again with `gptscript coachella` and see a list of bands:
 
-<output> 
+![output_lineup_only](https://github.com/randall-coding/coachella-gpt/assets/39175191/98a712fa-1a60-4aae-8f09-c0b8d634fc90)
 
 Great!
 
@@ -74,12 +74,12 @@ Take that url, visit the page and save all the bands playing at coachella in lin
 
 After running the script, voila, we find `lineup.txt` written with every band present.
 
-<output>
+![lineup_file_img](https://github.com/randall-coding/coachella-gpt/assets/39175191/ccc5d4db-6673-4df7-a788-9a081cefdb3f)
 
 ### Mission 3: Getting Band Recommendations
 
 First we'll need input from the user about bands or genres they like.  Let's just call that input "bands". 
-We'll declare the args for the main tool like so `args: bands: A list of bands you like.`
+We'll declare the args for the main tool with `args: bands: A list of bands you like.`
 
 Next we need to read the contents of `lineup.txt`.  To do this we will invoke the `sys.read` tool.  As the name implies `sys.read` is for reading a file.
 
@@ -138,19 +138,21 @@ temperature: 0.2
 
 #!python3 songs.py "$url"
 ```
+
+But when we run our script we see No Doubt's songs are for Franz Ferdinand! 
+
 ![franz_ferdinand_small](https://github.com/randall-coding/coachella-gpt/assets/39175191/2197a400-6b13-4f9a-851a-0f9243814917)
 
-When we run our script we see No Doubt's songs are for Franz Ferdinand!  This appears to be a hallucination. Since we didn't specifically tell chatGPI how to find the artist's spotify artist pages, it just pulled from its training material.  This seems to not be the most reliable method for finding the spotify page.
+This appears to be a hallucination. Since we didn't specifically tell chatGPI how to find the artist's spotify artist pages, it just pulled from its training material.  This seems to not be the most reliable method for finding the spotify page.
  
-Luckily, I discovered someone had already created a great gptscript tool for the Spotify api ([linked here]()). 
+Luckily, I discovered someone had already created a gptscript tool for the Spotify api ([linked here]()). 
 
-For the Spotify api we use the pre-made `spotify.yaml` file (credit to Grant Linville) which contains the OpenAPI tool definition.  By declaring the tool like so `tools: ./spotify.yaml` we assume spotify.yaml is in the same folder as our coachella.gpt file.
+For the Spotify api we use the pre-made `spotify.yaml` file (credit to Grant Linville) which contains the OpenAPI tool definition.  By declaring the tool like so `tools: ./spotify.yaml` we assume spotify.yaml is in the same folder as our coachella.gpt file.  This also requires us to OAuth into Spotify as details [here]().
 
 Now we update our tool `get-spotify-songs` like so:
 
 *coachella.gpt*
 ```
-
 ---
 name: get-spotify-songs
 description: get songs for each artist or band
