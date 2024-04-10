@@ -53,8 +53,6 @@ We run this again with `gptscript coachella` and see a list of bands:
 
 ![output_lineup_only](https://github.com/randall-coding/coachella-gpt/assets/39175191/98a712fa-1a60-4aae-8f09-c0b8d634fc90)
 
-Great!
-
 ### Mission 2: Saving the Lineup
 
 What if we want to save the lineup and use it for later?  For that, we'll need to use the `sys.write` tool. 
