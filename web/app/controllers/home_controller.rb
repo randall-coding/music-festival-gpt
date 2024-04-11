@@ -1,3 +1,5 @@
+require 'pty'
+
 class HomeController < ApplicationController
   def index
     # @bands = Band.all
@@ -16,86 +18,52 @@ class HomeController < ApplicationController
 
     if params[:input].present?
       Dir.chdir(File.dirname(folder_script_path)) do
-        Rails.logger.info "Command is "
-        command = "GPTSCRIPT_API_SPOTIFY_COM_BEARER_TOKEN=#{spotify_token} stdbuf -oL -eL  gptscript --cache=false " + " " + "coachella.gpt" + " " + params[:input]
-        command = "GPTSCRIPT_API_SPOTIFY_COM_BEARER_TOKEN=#{spotify_token} stdbuf -i0 -o0 -e0   gptscript --cache=false " + " " + "coachella.gpt" + " " + params[:input]
+        Rails.logger.info "Command is "  # 2>&1
+        command = "GPTSCRIPT_API_SPOTIFY_COM_BEARER_TOKEN=#{spotify_token} gptscript --cache=false " + " " + "coachella.gpt" + " " + params[:input] #+" 2>&1"
+        # command = "GPTSCRIPT_API_SPOTIFY_COM_BEARER_TOKEN=#{spotify_token} stdbuf -i0 -o0 -e0   gptscript --cache=false " + " " + "coachella.gpt" + " " + params[:input]
         
         Rails.logger.info {command}
+       
+        trigger = "OUTPUT:"
+        stdout_accumulator = "" 
 
-        # stdout, stderr, status = Open3.capture3(command)        
-        # if status.success? 
-        #   parsed_string = stdout.gsub("```json\n", "").gsub("\n```", "").strip
-        #   json_output = JSON.parse(parsed_string)
-        #   @bands = json_output
-        #   if @bands["bands"]
-        #     @bands = @bands["bands"]   
-        #   else 
-        #     @bands = [@bands] unless @bands.is_a? Array
-        #   end 
-        #   Rails.logger.info "GPTscript successful.  Output is:"
-        #   Rails.logger.info @bands
-        # else
-        #   puts "Error: #{stderr}"
-        #   @error = stderr 
-        # end
-
-        Open3.popen3(command) do |stdin, stdout, stderr, thread|
-          stdout_accumulator = ""
-          trigger = "OUTPUT:"
-          ActionCable.server.broadcast("command_output_stream", { key: "Test", line: "Running command" })
-          
-          # Broadcast output
-          Thread.new do
+        # Run command
+        begin
+          PTY.spawn(command) do |stdout, stdin, pid|
             begin
               stdout.each do |line|
-                # console.log("real time stdout #{line}")
-                # Detect the trigger to reset accumulator
-                puts "OK 1"
-                stdout_accumulator = "" if line&.include?(trigger)
-                puts "OK 2"
-                stdout_accumulator += line.to_s unless stdout_accumulator.empty?
-                puts "OK 3"
-
-                # Broadcast all output lines for real-time display
-                ActionCable.server.broadcast("command_output_stream", { key: "out", line: line })
-                puts "OK 4"
+                ActionCable.server.broadcast("command_output_stream", { key: "Command", line: line })
+                if line.include?(trigger)
+                  stdout_accumulator = ""  #reset
+                end
+                stdout_accumulator << line 
+                puts line 
               end
-            rescue IOError => e
-              # Handle the closed stream error, e.g., log it or silently ignore
-              Rails.logger.error("Stdout stream closed unexpectedly: #{e.message}")
+            rescue Errno::EIO
+              Rails.logger.warn "stdout error on PTY"
+            ensure
+              Process.wait(pid) 
             end
-          end
-          
-          # Broadcast errors
-          # Thread.new do
-          #   stderr.each do |line|
-          #     # console.log("real time stderr #{line}")
-          #     ActionCable.server.broadcast("command_output_stream", { key: "err", line: line })
-          #   end
-          # end
+        end
+        rescue PTY::ChildExited => e
+          puts "The child process exited! #{e}"
+        end
 
-          thread.join
-          
-          byebug
+        parsed_string = stdout_accumulator.gsub("OUTPUT:\r\n\r\n","")
+        puts "parsed_string"
+        puts parsed_string
 
-          if thread.value.success?
-            Rails.logger.info ("accumulator")
-            Rails.logger.info (stdout_accumulator)
-            return
-            parsed_string = stdout_accumulator.gsub("```json\n", "").gsub("\n```", "").strip
-            json_output = JSON.parse(parsed_string)
-            @bands = json_output
-            if @bands["bands"]
-              @bands = @bands["bands"]   
-            else 
-              @bands = [@bands] unless @bands.is_a? Array
-            end 
-            Rails.logger.info "GPTscript successful.  Output is:"
-            Rails.logger.info @bands
-          else  #command error
-            ActionCable.server.broadcast("command_output_stream", { key: "error", line: "Command execution failed." })
-          end
+        json_output = JSON.parse(parsed_string)
+        @bands = json_output
+        if @bands["bands"]
+          @bands = @bands["bands"]   
+        elsif @bands["matches"]
+          @bands = @bands["matches"]   
+        else
+          @bands = [@bands] unless @bands.is_a? Array
         end 
+        Rails.logger.info "GPTscript successful.  Output is:"
+        Rails.logger.info @bands
       end
     end
   end #index

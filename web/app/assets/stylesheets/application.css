@@ -34,4 +34,5 @@
   color: white;
   overflow-y: scroll;
   height: 500px;
+  padding: 0.5rem;
  }
