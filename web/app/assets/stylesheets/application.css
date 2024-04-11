@@ -28,3 +28,10 @@
  a.nav-link {
   text-decoration: underline;
  }
+
+ .console {
+  background-color: black;
+  color: white;
+  overflow-y: scroll;
+  height: 500px;
+ }

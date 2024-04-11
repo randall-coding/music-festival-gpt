@@ -5,7 +5,9 @@
       .input-group-prepend
         %button.input-group-text#search-btn{type: "submit"} Search
       %input.form-control{name: "input", type: "text", placeholder: "Tell us about bands you like...", value: params[:input]}  
- 
+  
+  #console-streaming.console.mb-2
+
   .content  
     - if @bands     
       %h4.content_title.mb-3 Bands you might like at coachella
@@ -30,4 +32,14 @@
       //document.querySelector('.content_title').innerHTML = 'Searching for bands at coachella.  Hold on!'
       this.submit(); 
     });
+
+    App.command_output = App.cable.subscriptions.create("CommandOutputChannel", {
+      received(data) {
+        console.log("received(data) called")
+        const outputElement = document.getElementById("console-streaming");
+        outputElement.innerHTML += `<p>${data.key}: ${data.line}</p>`;
+      }
+    });
   });
+  
+  

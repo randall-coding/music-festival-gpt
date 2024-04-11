@@ -3,3 +3,7 @@
 
 const channels = require.context('.', true, /_channel\.js$/)
 channels.keys().forEach(channels)
+
+import * as ActionCable from '@rails/actioncable'
+window.App || (window.App = {});
+window.App.cable = ActionCable.createConsumer();
