@@ -117,7 +117,7 @@ After running the script we see this output:
 
 That has only the exact bands we mentioned and no additional suggestions which is not what we want.
 
-To solve this we'll introduce the concept of LLM **temperature**.  The temperature setting in large language models (LLMs) affects the model's output randomness. A low temperature (closer to 0) makes the model's responses more predictable and deterministic, whereas a higher temperature (closer to 1.0) leads to more varied and sometimes more creative responses. GPTScript defaults to 0 temperature, so we will set it to 0.3 to increase it and see what happens. 
+To solve this we'll introduce the concept of LLM `temperature`.  The temperature setting in large language models (LLMs) affects the model's output randomness. A low temperature (closer to 0) makes the model's responses more predictable and deterministic, whereas a higher temperature (closer to 1.0) leads to more varied and sometimes more creative responses. GPTScript defaults to 0 temperature, so we will set it to 0.3 to increase it and see what happens. 
 
 [*coachella.gpt*]
 ```
