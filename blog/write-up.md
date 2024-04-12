@@ -245,4 +245,4 @@ The deployment is [live here](https://coachella-gpt.onrender.com) to try.  It ta
 
 ![command_output_ui](https://github.com/randall-coding/coachella-gpt/assets/39175191/3ec68913-bbd0-4e5b-976b-ac4f857e5f12)
 
-This tool shows the power of AI integrations.  We didn't have to write a single api call or complex logic to find / compare similar bands, find songs for bands and pull the lineup from Coachella.  I will definitely be integrating GPTScript into my future workflows.
+This tool shows the power of AI integrations.  We didn't have to write a single api call or complex logic to find / compare similar bands, find songs for bands, or pull the lineup from Coachella.  I will definitely be integrating GPTScript into my future workflows.
