@@ -72,8 +72,6 @@ Take that url, visit the page and save all the bands playing at coachella in lin
 
 After running the script, voila, we find `lineup.txt` written with every band present.
 
-![lineup_file_img](https://github.com/randall-coding/coachella-gpt/assets/39175191/ccc5d4db-6673-4df7-a788-9a081cefdb3f)
-
 ## Mission 3: Getting Band Recommendations
 
 First we'll need input from the user about bands or genres they like.  Let's just call that input "bands". 
