@@ -6,8 +6,7 @@
         %button.input-group-text#search-btn{type: "submit"} Search
       %input.form-control{name: "input", type: "text", placeholder: "Tell us about bands you like...", value: params[:input]}  
   
-  - unless @bands  
-    #console-streaming.console.mb-2
+  #console-streaming.console.mb-2{style: "#{'display:none;' if @bands}"}
 
   .content  
     - if @bands     
@@ -27,6 +26,7 @@
     document.getElementById('searchForm').addEventListener('submit', function(e) {
       e.preventDefault();
       document.getElementById('search-btn').disabled = true;
+      document.getElementById("console-streaming").style.display = 'block';
       document.querySelector('.loading-gif').style.display = 'flex';
       document.querySelector('.content').innerHTML = ''; 
       document.querySelector('.errors').innerHTML = '';
