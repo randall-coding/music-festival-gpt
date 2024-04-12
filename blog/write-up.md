@@ -155,7 +155,7 @@ But when we run our script we see No Doubt's songs are for Franz Ferdinand!
 
 ![franz_ferdinand_small](https://github.com/randall-coding/coachella-gpt/assets/39175191/2197a400-6b13-4f9a-851a-0f9243814917)
 
-This appears to be a hallucination. Since we didn't specifically tell chatGPI how to find the artist's spotify artist pages, it just pulled from its training material.  This seems to not be the most reliable method for finding the spotify page.
+This appears to be a hallucination. Since we didn't specifically tell ChatGPT how to find the artist's spotify artist pages, it just pulled from its training material.  This seems to not be the most reliable method for finding the spotify page.
  
 Luckily, I discovered that someone had already created a gptscript tool for the Spotify api ([credit to Grant Linville](https://github.com/g-linville)). 
 
