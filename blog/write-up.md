@@ -236,13 +236,13 @@ For all those $matches found find 3 spotify song for each -- song name and url. 
 
 ## Mission 7: Launching the App
 
-To deploy the app I created a simple Rails [web app](https://github.com/randall-coding/coachella-gpt/tree/master/web) which calls the script and displays the results in a list format.
+I created a simple Rails [web app](https://github.com/randall-coding/coachella-gpt/tree/master/web) for our tool which calls the script and displays the results in list format.
 The end result looks like this:
 
 ![good_results_2](https://github.com/randall-coding/coachella-gpt/assets/39175191/73cb38fe-459e-4b49-ba8e-22f0345e5766)
 
-The deployment is live [here](https://coachella-gpt.onrender.com) to try.  It takes a minute to get results right now, so we added a console output from our `gptscript` command to show what is happening in real time.
+The deployment is [live here](https://coachella-gpt.onrender.com) to try.  It takes a minute to get results right now, so we added a console output from our `gptscript` command to show what is happening in real time.
 
 ![command_output_ui](https://github.com/randall-coding/coachella-gpt/assets/39175191/3ec68913-bbd0-4e5b-976b-ac4f857e5f12)
 
-Nevertheless, this shows the power of AI integrations.  We didn't have to write a single api call or complex logic to find / compare similar bands, find songs for bands and pull the lineup from Coachella.  I will definitely be integrating GPTScript into my future workflows.
+This tool shows the power of AI integrations.  We didn't have to write a single api call or complex logic to find / compare similar bands, find songs for bands and pull the lineup from Coachella.  I will definitely be integrating GPTScript into my future workflows.
