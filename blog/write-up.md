@@ -194,13 +194,14 @@ After trying a few different fixes, I added the magic words *"do not abridge the
 ## Mission 6: Improve performance 
 Right now our script is taking upwards of 4 minutes to run, so let's see what we can change to increase performance.  
 
-One performance hit appears to be writing to file so often.  Let's replace language like *"write to matches.txt"* with *"reference this data as $matches"*.  `$matches` is just a variable in memory, rather than a file.  This saves about a minute of time doing this for 3 text files in the script.
+One performance hit appears to be writing to file.  Let's replace language like *"write to matches.txt"* with *"reference this data as $matches"*.  `$matches` is just a variable in memory, rather than a file.  This saves about a minute of run time replacing 3 text files with variables.
 
-Another change we can make is to reduce the number of tools being called.  I noticed that there is significant overhead with each additional tool in the call chain.  I started playing around with removing or combining some of the tools I declared.  I reduced my subtools down to just one called `get-spotify-songs`, and the main tool now handles recommendations and simply pulls the coachella lineup from an existing lineup.txt we created using gptscript.  That saves another minute.    
+Another performance boost comes from reducing the number of tools being called.  I noticed that there is significant overhead with each additional tool in the call chain.  I started playing around with removing or combining some of the tools I declared.  I reduced my subtools down to just one called `get-spotify-songs`, and the main tool now handles recommendations and simply pulls the coachella lineup from an existing lineup.txt we created using GPTScript.  That saves about another minute.    
 
-I've also tightened up the language to be specific about the input going into the tool we want to use *"pass $bands_at_coachella to the get-spotify-songs tool"* for instance.
+Lastly, I've tightened up the language to be specific about the input going into the tool we want to use *"pass $bands_at_coachella to the get-spotify-songs tool"* for instance.
 
-Our **final script** becomes: 
+Our **final script** becomes:
+
 [*coachella.gpt*]
 ```
 tools: get-spotify-songs, sys.read
