@@ -192,7 +192,7 @@ If `matches.txt` has 10 bands, I'm only getting back the first band.
 After trying a few different fixes, I added the magic words *"do not abridge the list"* to the prompt regarding the final output.  After adding this line, I was able to perform 12 successful runs in a row.
 
 ## Mission 6: Improve performance 
-Right now our script is taking upwards of 4 minutes, so let's see what we can change to increase performance.  
+Right now our script is taking upwards of 4 minutes to run, so let's see what we can change to increase performance.  
 
 One performance hit appears to be writing to file so often.  Let's replace language like *"write to matches.txt"* with *"reference this data as $matches"*.  `$matches` is just a variable in memory, rather than a file.  This saves about a minute of time doing this for 3 text files in the script.
 
