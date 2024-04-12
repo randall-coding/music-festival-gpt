@@ -9,11 +9,13 @@
   #console-streaming.console.mb-2{style: "#{'display:none;' if @bands}"}
 
   .content  
-    - if @bands     
+    - if @bands    
       %h4.content_title.mb-3 Bands you might like at coachella
-    -# = "My bands count " + @bands&.count.to_s
-    - @bands&.each do |band|
-      = render "home/band", band: band
+      -# = "My bands count " + @bands&.count.to_s
+      - if @bands.empty?
+        .text-danger Sorry we couldn't find anything.  We did try though.
+      - @bands&.each do |band|
+        = render "home/band", band: band
   .loading-gif{style: "display: none;"}
     .d-flex.justify-content-center.align-items-center.flex-column
       = image_tag "loading.gif"
