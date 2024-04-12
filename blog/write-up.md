@@ -189,94 +189,59 @@ After 3 runs of the script or so ChatGPT started returning only a single output 
  
 If `matches.txt` has 10 bands, I'm only getting back the first band.
 
-After trying a few different fixes, I added the magic words *"do not abridge the list"* to the prompt regarding the final output.  After adding this line, I was able to perform 12 successful runs in a row.  We'll call that reliable enough for now.
+After trying a few different fixes, I added the magic words *"do not abridge the list"* to the prompt regarding the final output.  After adding this line, I was able to perform 12 successful runs in a row.  We'll call that good enough for now.
 
-## Mission 6: The final script
+## Mission 6: Improve performance 
+Right now our script is taking upwards of 4 minutes, so let's see what we can change to increase performance.  
 
-Putting all the tools we made together, here is the final working script:
+One performance hit appears to be writing to file so often.  Let's replace language like *"write to matches.txt"* with *"reference this data as $matches"*.  `$matches` is just a variable in memory, rather than a file.  This saves about a minute of time doing this for 3 text files in the script.
 
+Another change we can make is to reduce the number of tools being called.  I noticed that there is significant overhead with each additional tool in the call chain.  I started playing around with removing or combining some of the tools I declared.  I reduced my subtools down to just one called `get-spotify-songs`, and the main tool now handles recommendations and simply pulls the coachella lineup from an existing lineup.txt we created using gptscript.  That saves another minute.    
+
+I've also tightened up the language to be specific about the input going into the tool we want to use *"pass $bands_at_coachella to the get-spotify-songs tool"* for instance.
+
+Our **final script** becomes: 
 [*coachella.gpt*]
 ```
-tools: sys.read, sys.write, search-coachella, sys.http.html2text?, get-spotify-songs
+tools: get-spotify-songs, sys.read
 args: bands: A list of bands you like.
+description: find bands the user might like at coachella along with 3 songs each
 json response: true
-temperature: 0.2
+temperature: 0.3
 
-Perform the following steps in order:
+You are a music expert, concert expert, and web researcher.
 
-You are a music expert, concert expert, and expert web researcher.
+Perform the following tasks:
 
-Based on the user input, find bands on coachella's lineup page which the user would like that are playing.  This will include both the specific bands the user mentioned, arists in a genre, along with similar artists you suggest.  
-  
-If you found bands playing next at Coachella (matches.txt) find 3 spotify songs for each artist on that list.
+Based on the user input, find bands from coachella's lineup by reading lineup.txt which the user would like that are playing at coachella.  The bands you find in the lineup will be both the same (first priority) and you must add several recommendations of similar artists playing in the lineup (up to 5 similar artists).  You will call that data $bands_at_coachella. $bands_at_coachella will be no more than 7 total. 
 
-The final output will be all the bands+song information from band_spotify.txt you found.  Return it as json format as an array where each object has the following structure { "name": <band name string>, "spotifyUrl": url_value, songs: [{"name": value, "url": song_url_value}] }.
+Then pass $bands_at_coachella to the get-spotify-songs tool to find $spotify_bands.
 
-Do not abridge the list or miss any!  Return the final output
+For all those $spotify_bands found return that output in json format like so: {"bands": [{ "name": <band name string>, "spotifyUrl": url_value, songs: [{"name": value, "url": song_url_value}] },...]}.
 
----
-name: search-coachella
-description: Find bands you might like at coachella
-args: bands: A list of bands you like.
-tools: sys.http.html2text?, sys.read, sys.write, download-coachella-content, find-similar-bands
-
-Do the following in order:
-
-Write down the input bands you've parsed from the input into input.txt file.
-
-Download the contents of coachella lineup into lineup.txt
-
-Next find bands from the input who are playing along with similar bands which are playing at coachella and write the output into matches.txt.
-
-Return all the bands from matches.txt.
-
----
-name: download-coachella-content
-description: Downloads the content of coachella lineup page into file lineup.txt
-tools:  sys.http.html2text?, sys.read, sys.write, github.com/gptscript-ai/search/brave
-
-If lineup.txt already exists and is for the upcoming show (today's date is before the concert) then skip running tool and output "OK lineup.txt up to date".  Otherwise...
-
-Search for the upcoming coachella lineup based on a specific year (either this year or next year if we passed it) and find the pitchfork.com page for it.  Search should look like "coachella lineup site:pitchfork.com"
-
-Take that url, visit the page and save all the bands playing at coachella in lineup.txt.  
-
----
-name: find-similar-bands
-description: Finds similar bands from concert
-args: lineup.txt: Concert band lineup file
-args: bands:  A list of bands you like   
-tools:  sys.read, sys.write
-temperature: 0.6
-internal prompt: false
-
-You are a music expert. You know all abouts bands, music genres and similar bands.  Look through each band/artist in lineup.txt to find all bands in lineup.txt that the user might like based on the "bands" input.  
-This will include the specific bands from the input (all of them) as well as several suggestions based on those band preferences or genres (no more than 3 similar bands if you found specific bands, and no more than 5 similar/genre based bands otherwise). 
-
-Write all the bands you find into matches.txt. 
-
-The matches.txt format will have band names separated by newline instead of comma and no more than 7 total.  
+Do not abridge the list or miss any items from $matches.  Return the final output
 
 ---
 name: get-spotify-songs
 description: get songs for each artist or band
 args: bands: a list of band
 args: numberOfSongs: number of songs to obtain per band or artist
-tools: search from ./spotify.yaml,get-an-artists-top-tracks from ./spotify.yaml, sys.read, sys.write
-#tools: ./spotify.yaml
-temperature: 0.2
-internal prompt: false 
+tools: search from ./spotify.yaml,get-an-artists-top-tracks from ./spotify.yaml, sys.read
+temperature: 0.3
+internal prompt: false
 
-For all bands in the list find 3 spotify song for each.  Name and url. Write the bands+songs output to band_spotify.txt file; create it if it doesn't exist.
+For all those $matches found find 3 spotify song for each -- song name and url.  Call that dataset $spotify_bands.
 ```
 
 ## Mission 7: Launching the App
 
-To deploy the app I created a simple Rails [web app](https://github.com/randall-coding/coachella-gpt/tree/master/web) which calls the script and displays the results in a list form.
+To deploy the app I created a simple Rails [web app](https://github.com/randall-coding/coachella-gpt/tree/master/web) which calls the script and displays the results in a list format.
 The end result looks like this:
 
 ![good_results_2](https://github.com/randall-coding/coachella-gpt/assets/39175191/73cb38fe-459e-4b49-ba8e-22f0345e5766)
 
-The deployment is live [here](https://coachella-gpt.onrender.com) to try.  It takes a minute to get results right now, but optimizing our script will be the subject of our next blog.
+The deployment is live [here](https://coachella-gpt.onrender.com) to try.  It takes a minute to get results right now, so we added a console output from our `gptscript` command to show what is happening in real time.
 
-Nevertheless, this shows the power of AI integrations.  We didn't have to write a single api call or complex logic to find / compare similar bands.  I will definitely be integrating GPTScript into my future workflows.
+![command_output_ui](https://github.com/randall-coding/coachella-gpt/assets/39175191/3ec68913-bbd0-4e5b-976b-ac4f857e5f12)
+
+Nevertheless, this shows the power of AI integrations.  We didn't have to write a single api call or complex logic to find / compare similar bands, find songs for bands and pull the lineup from Coachella.  I will definitely be integrating GPTScript into my future workflows.
