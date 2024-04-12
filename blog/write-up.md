@@ -129,7 +129,9 @@ After running the script again I see `matches.txt` filled with bands.
 
 ![longer_matches_console_output](https://github.com/randall-coding/coachella-gpt/assets/39175191/e1d1bbdf-a613-44be-9d04-dd750ab9da6c)
 
-Better!  But now I'm seeing about a dozen bands and sometimes not the original bands from our input. We always want to at least see the exact bands that match in addition to suggestions (and not necessarily a dozen).  Let's add some language to our prompt to make the output more specific *"...This will include the specific bands from the input as well as several suggestions based on those band preferences."*
+Better!  But now I'm seeing about a dozen bands and sometimes not the original bands from our input. Let's add some language to our prompt to make the output more specific 
+
+*"...This will include the specific bands from the input as well as several suggestions based on those band preferences."*
 
 ## Mission 4: Fetching Songs from Spotify
 
