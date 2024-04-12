@@ -183,7 +183,7 @@ Upon running the script, we see songs output for every band we found in `matches
 
 ## Mission 5: Ensure Reliable Outputs
 
-After 3 runs of the script or so the AI started returning only a single output rather than alls bands found in `matches.txt`.  
+After 3 runs of the script the AI started returning only a single output rather than all bands found in `matches.txt`.  
 
 ![single_output_error_console](https://github.com/randall-coding/coachella-gpt/assets/39175191/d072bea5-8c2a-4a47-bb95-ec2a77e20261)
  
