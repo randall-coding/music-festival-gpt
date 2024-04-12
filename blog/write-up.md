@@ -21,7 +21,7 @@ We will also need a variable for Brave Search token set for the search tool:
 
 ## Mission 1: Capturing the Coachella Lineup
 
-Let's start by creating our first tool to capture the upcoming coachella lineup.  The simplest way to capture a website with GPTscript is using the built in `sys.http.html2text?` tool.  As the name implies it converts an http request into text that ChatGPT can process.  
+Let's start by creating our first tool to capture the upcoming coachella lineup.  The simplest way to capture a website with GPTscript is using the built in `sys.http.html2text?` tool.  As the name implies it converts an http request into text that the AI can process.  
 
 Using coachella's official lineup page https://www.coachella.com/lineup I created a tool like this:
 
@@ -56,7 +56,7 @@ We run this again with `gptscript coachella` and see a list of bands:
 ## Mission 2: Saving the Lineup
 
 What if we want to save the lineup and use it for later?  For that, we'll need to use the `sys.write` tool. 
-After we add the tool to our tools list we simply tell out script to write to a given filename as shown below:
+After we add the tool to our tools list we simply tell our script to write to a given filename as shown below:
 
 [*coachella.gpt*]
 ```
@@ -119,7 +119,7 @@ After running the script we see this output:
 
 That has only the exact bands we mentioned and no additional suggestions which is not what we want.
 
-To solve this we'll introduce the concept of LLM **temperature**.  The temperature setting in large language models (LLMs) like GPT affects the model's output randomness. A low temperature (closer to 0) makes the model's responses more predictable and deterministic, whereas a higher temperature (closer to 1.0) leads to more varied and sometimes more creative responses. GPTscript defaults to 0 temperature, so we will set it to 0.3 to increase it and see what happens. 
+To solve this we'll introduce the concept of LLM **temperature**.  The temperature setting in large language models (LLMs) affects the model's output randomness. A low temperature (closer to 0) makes the model's responses more predictable and deterministic, whereas a higher temperature (closer to 1.0) leads to more varied and sometimes more creative responses. GPTScript defaults to 0 temperature, so we will set it to 0.3 to increase it and see what happens. 
 
 [*coachella.gpt*]
 ```
@@ -131,7 +131,7 @@ After running the script again I see `matches.txt` filled with bands.
 
 ![longer_matches_console_output](https://github.com/randall-coding/coachella-gpt/assets/39175191/e1d1bbdf-a613-44be-9d04-dd750ab9da6c)
 
-Better!  But now I'm seeing about a dozen bands and sometimes not the original bands input. We always want at least the exact bands that match in addition to several suggestions (and not neceesarily a dozen).  Let's add some language to our prompt to make the output more specific *"...This will include the specific bands from the input as well as several suggestions based on those band preferences."*
+Better!  But now I'm seeing about a dozen bands and sometimes not the original bands from our input. We always want to at least see the exact bands that match in addition to suggestions (and not necessarily a dozen).  Let's add some language to our prompt to make the output more specific *"...This will include the specific bands from the input as well as several suggestions based on those band preferences."*
 
 ## Mission 4: Fetching Songs from Spotify
 
@@ -157,11 +157,11 @@ But when we run our script we see No Doubt's songs are for Franz Ferdinand!
 
 This appears to be a hallucination. Since we didn't specifically tell chatGPI how to find the artist's spotify artist pages, it just pulled from its training material.  This seems to not be the most reliable method for finding the spotify page.
  
-Luckily, I discovered someone had already created a gptscript tool for the Spotify api ([credit to Grant Linville](https://github.com/g-linville)). 
+Luckily, I discovered that someone had already created a gptscript tool for the Spotify api ([credit to Grant Linville](https://github.com/g-linville)). 
 
-For the Spotify api we use the pre-made [spotify.yaml](https://github.com/randall-coding/coachella-gpt/blob/master/blog/coachella/spotify.yaml) file which contains the OpenAPI tool definition. This also requires us to OAuth into Spotify as details [here](https://github.com/randall-coding/coachella-gpt/blob/master/blog/coachella/spotify-oauth.md).
+For the Spotify api we use the pre-made [spotify.yaml](https://github.com/randall-coding/coachella-gpt/blob/master/blog/coachella/spotify.yaml) file which contains the OpenAPI tool definition. This also requires us to OAuth into Spotify as explained [here](https://github.com/randall-coding/coachella-gpt/blob/master/blog/coachella/spotify-oauth.md).
 
-Now we update our tool `get-spotify-songs` like so:
+Now we update our tool `get-spotify-songs` like this:
 
 [*coachella.gpt*]
 ```
@@ -177,13 +177,13 @@ internal prompt: false
 For all bands in the list find 3 spotify song for each.  Name and url. For each band wait 1 second between each api call.  Write the bands+songs output to band_spotify.txt file; create it if it doesn't exist.
 ```    
 
-Upon running this script, we see songs output for every band we found in `matches.txt`.  
+Upon running the script, we see songs output for every band we found in `matches.txt`.  The AI chose the right tool to use from spotify.yaml without us needing to tell it. 
 
 ![matches_txt_good](https://github.com/randall-coding/coachella-gpt/assets/39175191/c9c8a301-02a0-46e4-b795-d8f4569c15c9)
 
 ## Mission 5: Ensure Reliable Outputs
 
-After 3 runs of the script or so ChatGPT started returning only a single output rather than alls bands found in `matches.txt`.  
+After 3 runs of the script or so the AI started returning only a single output rather than alls bands found in `matches.txt`.  
 
 ![single_output_error_console](https://github.com/randall-coding/coachella-gpt/assets/39175191/d072bea5-8c2a-4a47-bb95-ec2a77e20261)
  
