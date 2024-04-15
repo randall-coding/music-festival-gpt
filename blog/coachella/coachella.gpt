@@ -1,73 +1,28 @@
-tools: sys.read, sys.write, search-coachella, sys.http.html2text?, get-spotify-songs
-#json_response true args for 
+tools: get-spotify-songs, sys.read
 args: bands: A list of bands you like.
+description: find bands the user might like at coachella along with 3 songs each
 json response: true
-temperature: 0.2
-
-Perform the following steps in order:
-
-You are a music expert, concert expert, and expert web researcher.
-
-Based on the user input, find bands on coachella's lineup page which the user would like that are playing.  This will include both the specific bands the user mentioned, arists in a genre, along with similar artists you suggest.  
-  
-If you found bands playing next at Coachella (matches.txt) find 3 spotify songs for each artist on that list.
-
-The final output will be all the bands+song information from band_spotify.txt you found.  Return it as json format as an array where each object has the following structure { "name": <band name string>, "spotifyUrl": url_value, songs: [{"name": value, "url": song_url_value}] }.
-
-Do not abridge the list or miss any!  Return the final output
-
----
-name: search-coachella
-description: Find bands you might like at coachella
-args: bands: A list of bands you like.
-#tools: download-coachella-content
-tools: sys.http.html2text?, sys.read, sys.write, download-coachella-content, find-similar-bands
-
-Do the following in order:
-
-Write down the input bands you've parsed from the input into input.txt file.
-
-Download the contents of coachella lineup into lineup.txt
-
-Next find bands from the input who are playing along with similar bands which are playing at coachella and write the output into matches.txt.
-
-Return all the bands from matches.txt.
-
----
-name: download-coachella-content
-description: Downloads the content of coachella lineup page into file lineup.txt
-tools:  sys.http.html2text?, sys.read, sys.write, github.com/gptscript-ai/search/brave
-
-If lineup.txt already exists and is for the upcoming show (today's date is before the concert) then skip running tool and output "OK lineup.txt up to date".  Otherwise...
-
-Search for the upcoming coachella lineup based on a specific year (either this year or next year if we passed it) and find the pitchfork.com page for it.  Search should look like "coachella lineup site:pitchfork.com"
-
-Take that url, visit the page and save all the bands playing at coachella in lineup.txt.  
-
----
-name: find-similar-bands
-description: Finds similar bands from concert
-args: lineup.txt: Concert band lineup file
-args: bands:  A list of bands you like   
-tools:  sys.read, sys.write
 temperature: 0.3
-internal prompt: false
 
-You are a music expert. You know all abouts bands, music genres and similar bands.  Look through each band/artist in lineup.txt to find all bands in lineup.txt that the user might like based on the "bands" input.  
-This will include the specific bands from the input (all of them) as well as several suggestions based on those band preferences or genres (no more than 3 similar bands if you found specific bands, and no more than 5 similar/genre based bands otherwise). 
+You are a music expert, concert expert, and web researcher.
 
-Write all the bands you find into matches.txt. 
+Perform the following tasks:
 
-The matches.txt format will have band names separated by newline instead of comma and no more than 7 total.  
+Based on the user input, find bands from coachella's lineup by reading lineup.txt which the user would like that are playing at coachella.  The bands you find in the lineup will be both the same (first priority) and you must add several recommendations of similar artists playing in the lineup (up to 5 similar artists).  You will call that data $bands_at_coachella. $bands_at_coachella will be no more than 7 total. 
+
+Then pass $bands_at_coachella to the get-spotify-songs tool to find $spotify_bands.
+
+For all those $spotify_bands found return that output in json format like so: {"bands": [{ "name": <band name string>, "spotifyUrl": url_value, songs: [{"name": value, "url": song_url_value}] },...]}.
+
+Do not abridge the list or miss any items from $matches.  Return the final output
 
 ---
 name: get-spotify-songs
 description: get songs for each artist or band
 args: bands: a list of band
 args: numberOfSongs: number of songs to obtain per band or artist
-tools: search from ./spotify.yaml,get-an-artists-top-tracks from ./spotify.yaml, sys.read, sys.write
-#tools: ./spotify.yaml
-temperature: 0.2
-internal prompt: false 
+tools: search from ./spotify.yaml,get-an-artists-top-tracks from ./spotify.yaml, sys.read
+temperature: 0.3
+internal prompt: false
 
-For all bands in the list find 3 spotify song for each.  Name and url. For each band wait 1 second between each api call.  Write the bands+songs output to band_spotify.txt file; create it if it doesn't exist.
+For all those $matches found find 3 spotify song for each -- song name and url.  Call that dataset $spotify_bands.
