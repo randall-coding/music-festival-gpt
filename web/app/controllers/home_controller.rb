@@ -1,13 +1,9 @@
 require 'pty'
 
 class HomeController < ApplicationController
-  def index
-    # @bands = Band.all
-    # params[:input] = "DJ Snake"    
-    # @bands = [{"name"=>"DJ Snake", "spotifyUrl"=>"https://open.spotify.com/artist/540vIaP2JwjQb9dm3aArA4", "songs"=>[{"name"=>"Lean On (feat. MØ & DJ Snake)", "url"=>"https://open.spotify.com/track/1qE47wUKG2juJwPoLqg4C9"}, {"name"=>"Let Me Love You", "url"=>"https://open.spotify.com/track/0lYBSQXN6rCTvUZvg9S0lU"}, {"name"=>"Please Don't Change (feat. DJ Snake)", "url"=>"https://open.spotify.com/track/0k0GtcnyQLMiXrdEDbLXmJ"}]}]
-    # @bands = []
-    # return :index
-    
+  def index    
+    @uuid = params[:uuid].presence || SecureRandom.uuid
+
     folder_script_path = Rails.root.join('..', "coachella.gpt").to_s
     spotify_token = refresh_spotify_token
 
@@ -32,12 +28,12 @@ class HomeController < ApplicationController
           PTY.spawn(command) do |stdout, stdin, pid|
             begin
               stdout.each do |line|
-                ActionCable.server.broadcast("command_output_stream", { key: "Command", line: line })
+                ActionCable.server.broadcast("command_output_#{@uuid}", { key: "Command", line: line })
                 if line.include?(trigger)
                   stdout_accumulator = ""  #reset
                 end
                 stdout_accumulator << line 
-                puts line 
+                puts line
               end
             rescue Errno::EIO
               Rails.logger.warn "stdout error on PTY"

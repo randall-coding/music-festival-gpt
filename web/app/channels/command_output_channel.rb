@@ -1,6 +1,6 @@
 class CommandOutputChannel < ApplicationCable::Channel
   def subscribed
-    stream_from "command_output_stream"
+    stream_from "command_output#{"_" + params[:uuid]}"
   end
 
   def unsubscribed

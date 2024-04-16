@@ -1,6 +1,7 @@
 .container.mt-4
   %h5.mb-3 Input bands (or genres) you like and we'll find artists you'll like playing at coachella.
   %form{action: "/", method: "get", id: 'searchForm'}
+    = hidden_field_tag :uuid, @uuid 
     .input-group.mb-3
       .input-group-prepend
         %button.input-group-text#search-btn{type: "submit"} Search
@@ -36,7 +37,7 @@
     });
 
     // Realtime command output
-    App.command_output = App.cable.subscriptions.create("CommandOutputChannel", {
+    App.command_output = App.cable.subscriptions.create({ channel: "CommandOutputChannel", uuid: "#{@uuid}" }, {
       received(data) {
         console.log("received(data) called")
         const outputElement = document.getElementById("console-streaming");
