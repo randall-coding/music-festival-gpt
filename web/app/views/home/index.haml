@@ -1,17 +1,21 @@
 .container.mt-4
-  %h5.mb-3 Input bands (or genres) you like and we'll find artists you'll like playing at coachella.
+  %h5.mb-3 Input bands (or genres) you like and we'll find artists you'll like playing at a concert.
   %form{action: "/", method: "get", id: 'searchForm'}
     = hidden_field_tag :uuid, @uuid 
     .input-group.mb-3
       .input-group-prepend
         %button.input-group-text#search-btn{type: "submit"} Search
-      %input.form-control{name: "input", type: "text", placeholder: "Tell us about bands you like...", value: params[:input]}  
-  
+      %input.form-control{name: "input", type: "text", placeholder: "Tell us about bands you like...", value: params[:input]}
+      -# %select.form-control{name: "venue", value: params[:venue], style: "max-width: max-content"}
+      -#   %option{value: "coachella"} Coachella
+      -#   %option{value: "lollapalooza"} Lollapalooza
+      = select_tag "venue", options_for_select(VENUE_OPTIONS, selected: params[:venue]), {class: "form-control", style: "max-width: max-content"}
+
   #console-streaming.console.mb-2{style: "#{'display:none;' if @bands}"}
 
   .content
     - if @bands
-      %h4.content_title.mb-3 Bands you might like at coachella
+      %h4.content_title.mb-3 Bands you might like at #{params[:venue] || "Coachella"}
       - if @bands.empty?
         .text-danger Sorry we couldn't find anything.  We did try though.
       - @bands&.each do |band|

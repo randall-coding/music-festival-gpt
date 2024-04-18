@@ -16,8 +16,10 @@ class HomeController < ApplicationController
     if params[:input].present?
       Dir.chdir(File.dirname(folder_script_path)) do
         Rails.logger.info "Command is "  # 2>&1
-        command = "GPTSCRIPT_API_SPOTIFY_COM_BEARER_TOKEN=#{spotify_token} gptscript --disable-cache" + " " + "coachella.gpt" + " " + params[:input] 
-        
+        # command = "GPTSCRIPT_API_SPOTIFY_COM_BEARER_TOKEN=#{spotify_token} gptscript --disable-cache" + " " + "coachella.gpt" + " " + params[:input] 
+        command = "GPTSCRIPT_API_SPOTIFY_COM_BEARER_TOKEN=#{spotify_token} gptscript --disable-cache" + " " + "coachella.gpt" + " --input " + params[:input]
+        command = command + " --venue " + params[:venue] || "coachella"
+
         Rails.logger.info {command}
        
         trigger = "OUTPUT:"
