@@ -36,3 +36,8 @@
   height: 500px;
   padding: 0.5rem;
  }
+
+nav.navbar {
+  padding-top: 0;
+  padding-bottom: 0;
+ }

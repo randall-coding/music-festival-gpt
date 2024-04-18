@@ -208,19 +208,23 @@ tools: get-spotify-songs, sys.read
 args: bands: A list of bands you like.
 description: find bands the user might like at coachella along with 3 songs each
 json response: true
-temperature: 0.3
+temperature: 0.2
 
 You are a music expert, concert expert, and web researcher.
 
-Perform the following tasks:
+Perform the following tasks in order:
 
-Based on the user input, find bands from coachella's lineup by reading lineup.txt which the user would like that are playing at coachella.  The bands you find in the lineup will be both the same (first priority) and you must add several recommendations of similar artists playing in the lineup (up to 5 similar artists).  You will call that data $bands_at_coachella. $bands_at_coachella will be no more than 7 total. 
+Read lineup.txt and find the exact bands from user's input that are also in lineup.  You will call that data $exact_matches.  $exact_matches will be empty unless the band name is found in both lineup and input.
+
+Then based on the user input, recommend several bands from lineup.txt which are in the same genre (up to 5 similar artists).  You will call that data $recommendations.  
+
+Next combine $exact_matches and $recommendations into $bands_at_coachella.
 
 Then pass $bands_at_coachella to the get-spotify-songs tool to find $spotify_bands.
 
 For all those $spotify_bands found return that output in json format like so: {"bands": [{ "name": <band name string>, "spotifyUrl": url_value, songs: [{"name": value, "url": song_url_value}] },...]}.
 
-Do not abridge the list or miss any items from $matches.  Return the final output
+Do not abridge the list or miss any items from $spotify_bands.  Return the final output
 
 ---
 name: get-spotify-songs
@@ -231,7 +235,7 @@ tools: search from ./spotify.yaml,get-an-artists-top-tracks from ./spotify.yaml,
 temperature: 0.3
 internal prompt: false
 
-For all those $matches found find 3 spotify song for each -- song name and url.  Call that dataset $spotify_bands.
+For all the $bands given, find 3 spotify song for each -- song name and url.  Call that dataset $spotify_bands.
 ```
 
 ## Mission 7: Launching the App

@@ -16,7 +16,7 @@ class HomeController < ApplicationController
     if params[:input].present?
       Dir.chdir(File.dirname(folder_script_path)) do
         Rails.logger.info "Command is "  # 2>&1
-        command = "GPTSCRIPT_API_SPOTIFY_COM_BEARER_TOKEN=#{spotify_token} gptscript " + " " + "coachella.gpt" + " " + params[:input] 
+        command = "GPTSCRIPT_API_SPOTIFY_COM_BEARER_TOKEN=#{spotify_token} gptscript --disable-cache" + " " + "coachella.gpt" + " " + params[:input] 
         
         Rails.logger.info {command}
        
@@ -28,15 +28,23 @@ class HomeController < ApplicationController
           PTY.spawn(command) do |stdout, stdin, pid|
             begin
               stdout.each do |line|
+                old_level = ActionCable.server.config.logger.level #suppress log
+                ActionCable.server.config.logger.level = Logger::ERROR
                 ActionCable.server.broadcast("command_output_#{@uuid}", { key: "Command", line: line })
+                ActionCable.server.config.logger.level = old_level # restore log level
+
                 if line.include?(trigger)
                   stdout_accumulator = ""  #reset
                 end
                 stdout_accumulator << line 
                 puts line
               end
-            rescue Errno::EIO
+            rescue Errno::EIO => e
               Rails.logger.warn "stdout error on PTY"
+              Rails.logger.warn e
+            rescue JSON::GeneratorError => e
+              Rails.logger.warn "stdout error on PTY"
+              Rails.logger.warn e
             ensure
               Process.wait(pid) 
             end
