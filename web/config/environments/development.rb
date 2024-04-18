@@ -75,4 +75,6 @@ Rails.application.configure do
   # config.action_cable.disable_request_forgery_protection = true
 
   config.hosts << "coachella-gpt.onrender.com"
+  config.hosts << "music-festival-gpt.onrender.com"
+  
 end
