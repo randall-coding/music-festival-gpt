@@ -10,7 +10,7 @@ If the image was saved, find the image named website_lollapalooza and extract it
 
 Write the extracted text to lollapalooza_output.txt
 
-Next search through lollapalooza_output.txt to find all bands or artists playing at lollapalooza, then write the results to lollapalooza_lineup.txt line by line.
+Next search through lollapalooza_output.txt to find all bands or artists playing at lollapalooza, then write the results to lollapalooza_lineup.txt line by line in title case instead of all caps.
 
 ---
 name: find-lollapalooza-lineup-image
