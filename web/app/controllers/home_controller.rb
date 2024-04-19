@@ -3,6 +3,10 @@ require 'pty'
 class HomeController < ApplicationController
   def index    
     @uuid = params[:uuid].presence || SecureRandom.uuid
+  end
+
+  def search
+    @uuid = params[:uuid].presence || SecureRandom.uuid
 
     folder_script_path = Rails.root.join('..', "coachella.gpt").to_s
     spotify_token = refresh_spotify_token
@@ -15,11 +19,10 @@ class HomeController < ApplicationController
 
     if params[:input].present?
       Dir.chdir(File.dirname(folder_script_path)) do
-        Rails.logger.info "Command is "  # 2>&1
-        # command = "GPTSCRIPT_API_SPOTIFY_COM_BEARER_TOKEN=#{spotify_token} gptscript --disable-cache" + " " + "coachella.gpt" + " " + params[:input] 
         command = "GPTSCRIPT_API_SPOTIFY_COM_BEARER_TOKEN=#{spotify_token} gptscript --disable-cache" + " " + "coachella.gpt" + " --input " + params[:input]
         command = command + " --venue " + params[:venue] || "coachella"
-
+        
+        Rails.logger.info "Command is "
         Rails.logger.info {command}
        
         trigger = "OUTPUT:"
@@ -72,7 +75,8 @@ class HomeController < ApplicationController
         Rails.logger.info @bands
       end
     end
-  end #index
+    render :index
+  end
 
   private
   def refresh_spotify_token

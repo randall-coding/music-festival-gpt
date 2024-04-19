@@ -1,6 +1,6 @@
 .container.mt-4
   %h5.mb-3 Input bands (or genres) you like and we'll find artists you'll like playing at a concert.
-  %form{action: "/", method: "get", id: 'searchForm'}
+  = form_tag('/search', method: :post, id: 'searchForm') do
     = hidden_field_tag :uuid, @uuid 
     .input-group.mb-3
       .input-group-prepend
