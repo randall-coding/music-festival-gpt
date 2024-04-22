@@ -1,0 +1,33 @@
+tools:  download-website-content, sys.http.html2text?, sys.write, sys.read, github.com/gptscript-ai/search/brave, concat-files
+
+You are a music expert, concert expert, and expert web researcher.
+
+Perform the following steps in order:
+
+If jazz_fest_lineup.txt already exists and is for the upcoming show (if today's date is before the concert) then skip running tool and output "OK jazz_fest_lineup.txt up to date".  Otherwise...
+
+Search for the upcoming jazz fest lineup based on a specific year (either this year or next year if we passed it) and find the jazzandheritage.org page for it.  Search should look like "jazz fest lineup site:jazzandheritage.org"
+
+Take that url, visit the page and wait for 30 seconds, then download the content of DOM element with class "entry-content" to jazz_fest_website.txt
+
+Based on the weekend listing in jazz_fest_website.txt, save all bands will play in jazz festival to files with format jazz_fest_$number_lineup.txt line by line with maximum 200 bands per file
+
+Find all jazz_fest_$number_lineup.txt in current directory and concat all of them into one file named jazz_fest_lineup.txt
+
+---
+name: download-website-content
+description: Download websites including those which render using javascript 
+args: url: url to download
+args: filename: filename to write website into.  default to "website.txt"
+args: wait_time: wait time in seconds to allow the page to load.  default None.
+args: css_selector: target element to download content
+
+#!python3 download-website-content.py "$url" "$filename" "" "$css_selector"
+
+---
+name: concat-files
+description: Concat given files into one file
+args: output_file: output file
+args: file_urls: array of url
+
+#!python3 concat_files.py $output_file $file_urls

@@ -1,1 +1,1 @@
-VENUE_OPTIONS = [["Coachella", "coachella"], ["Lollapalooza", "lollapalooza"]]
+VENUE_OPTIONS = [["Coachella", "coachella"], ["Lollapalooza", "lollapalooza"], ["Jazz Fest", "jazz_fest"]]
