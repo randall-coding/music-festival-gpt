@@ -1,0 +1,11 @@
+tools: github.com/gptscript-ai/search/brave-image, sys.read, sys.write, github.com/gptscript-ai/vision
+
+Do the following in order:
+
+Find the lineup images in Glastonbury's lineup page based on a specific year (either this year or next year if we passed it). The search should look like "glastonbury line-up 2024 site:glastonburyfestivals.co.uk"
+
+If the image or images were saved, find the images named website_glastonbury_$number located in the current directory and put their extracted texts into a list. Ingnore images when the image is invalid.
+
+Write the combined extracted text to glastonbury_output.txt.
+
+Next search through glastonbury_output.txt to find all bands or artists playing at glastonbury, then write the result to glastonbury_lineup.txt line by line in title case, not all caps.
