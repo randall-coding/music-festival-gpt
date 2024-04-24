@@ -3,5 +3,6 @@ VENUE_OPTIONS = [
   ["Lollapalooza", "lollapalooza"], 
   ["Jazz Fest", "jazz_fest"],
   ["Glastonbury", "glastonbury"],
+  ["Bottlerock", "bottlerock"],
 ]
 

@@ -1,0 +1,31 @@
+tools: find-bottlerock-lineup-image, sys.read, sys.write, github.com/gptscript-ai/vision, github.com/gptscript-ai/search/brave
+
+You are a music expert, concert expert, and web researcher.
+
+Do the following in order:
+
+Find the lineup image in bottlerock's lineup page
+
+If the image was saved, find the image named website_bottlerock and extract its text into a list.
+
+Write the extracted text to bottlerock_output.txt
+
+Next search through bottlerock_output.txt to find all bands or artists playing at bottlerock, then write the results to bottlerock_lineup.txt line by line in title case instead of all caps.
+
+---
+name: find-bottlerock-lineup-image
+description: Get image from bottlerock's lineup page
+tools: download-website-image
+
+Download the billboard image from https://www.bottlerocknapavalley.com/2024-lineup ,which has css class full-width-image, into the website_bottlerock.jpg file.
+
+If you cannot download the image, print a response.
+
+---
+name: download-website-image
+description: Used to download a website image 
+args: url: The url to download
+args: filename: (optional) filename to write website into.  Default to "website.jpg"
+args: css_selector: (optional) class name to find in html
+
+#!python3 ../download-website-image.py "$url" "$filename" "$css_selector"
