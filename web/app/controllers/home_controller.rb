@@ -61,6 +61,10 @@ class HomeController < ApplicationController
         parsed_string = stdout_accumulator.gsub("OUTPUT:\r\n\r\n","")
         puts "parsed_string"
         puts parsed_string
+        
+        if parsed_string.split("\n").length > 1
+          parsed_string = parsed_string.split("\n")[1].gsub("\r\n","")
+        end
 
         json_output = JSON.parse(parsed_string)
         @bands = json_output
