@@ -1,0 +1,31 @@
+tools: find-bonnaroo-lineup-image, sys.read, sys.write, github.com/gptscript-ai/vision, github.com/gptscript-ai/search/brave
+
+You are a music expert, concert expert, and web researcher.
+
+Do the following in order:
+
+Find the lineup image urls in bonnaroo's lineup webiste https://www.bonnaroo.com/lineup
+
+If the image urls were saved, find the file named website_image_urls.txt and pick all the urls related to the lineup of a specific year (either this year or next year if we passed the start date already), then extract their text into a list. Ingnore the image if the image is invalid
+
+Write extracted texts to bonnaroo_output.txt
+
+Next search through bonnaroo_output.txt to find all bands or artists playing at bonnaroo, then write the result to bonnaroo_lineup.txt line by line in title case and not all caps.
+
+---
+name: find-bonnaroo-lineup-image
+description: Get image from bonnaroo's lineup page
+tools: download-website-image-urls
+
+Save urls into the bonnaroo_image_urls.txt file from https://www.bonnaroo.com/lineup using css class schedule-images_content-wrapper.
+
+If you cannot find the image urls, print a response.
+
+---
+name: download-website-image-urls
+description: Used to download a website image 
+args: url: The url to download
+args: css_selector: (optional) class to find in html, with dot prefix
+args: filename: (optional) filename to write urls into.  Default to "website_image_urls.txt"
+
+#!python3 ../download-website-image-urls.py "$url" "$css_selector" "$filename"
