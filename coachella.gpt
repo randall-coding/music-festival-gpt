@@ -13,11 +13,11 @@ In case venue argument is present, lineup file name is ${venue}_lineup.txt. Othe
 
 Read the lineup file and find the exact bands from user's input that are also in lineup.  You will call that data $exact_matches.  $exact_matches will be empty unless the band name is found in both lineup and input.
 
-Then based on the user input, recommend several bands from lineup.txt which are in the same genre (up to 5 similar artists).  You will call that data $recommendations.  
+Then based on the user input, recommend several bands from the lineup file which are in the same genre (up to 5 similar artists).  You will call that data $recommendations.  
 
-Next combine $exact_matches and $recommendations into $bands_at_coachella.
+Next combine $exact_matches and $recommendations into $bands_at_venue.
 
-Then pass $bands_at_coachella to the get-spotify-songs tool to find $spotify_bands.
+Then pass $bands_at_venue to the get-spotify-songs tool to find $spotify_bands.
 
 For all those $spotify_bands found return that output in json format like so: {"bands": [{ "name": <band name string>, "spotifyUrl": url_value, songs: [{"name": value, "url": song_url_value}] },...]}.
 
@@ -33,3 +33,5 @@ temperature: 0.3
 internal prompt: false
 
 For all the $bands given, find 3 spotify song for each -- song name and url.  Call that dataset $spotify_bands.
+
+When using the spotify api do not repeat an api call more than 3 times.
