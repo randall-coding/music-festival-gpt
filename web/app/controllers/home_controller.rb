@@ -15,70 +15,76 @@ class HomeController < ApplicationController
       puts "Error: spotify_token nil"
       @error = "Error:  Spotify API token returned nil.  Please contact administrator."
       return
-    end 
-
-    if params[:input].present?
-      Dir.chdir(File.dirname(folder_script_path)) do
-        command = "GPTSCRIPT_API_SPOTIFY_COM_BEARER_TOKEN=#{spotify_token} gptscript --disable-cache" + " " + "coachella.gpt" + " --input " + params[:input]
-        command = command + " --venue " + params[:venue] || "coachella"
-        
-        Rails.logger.info "Command is "
-        Rails.logger.info {command}
-       
-        trigger = "OUTPUT:"
-        stdout_accumulator = "" 
-
-        # Run command
-        begin
-          PTY.spawn(command) do |stdout, stdin, pid|
-            begin
-              stdout.each do |line|
-                old_level = ActionCable.server.config.logger.level #suppress log
-                ActionCable.server.config.logger.level = Logger::ERROR
-                ActionCable.server.broadcast("command_output_#{@uuid}", { key: "Command", line: line })
-                ActionCable.server.config.logger.level = old_level # restore log level
-
-                if line.include?(trigger)
-                  stdout_accumulator = ""  #reset
-                end
-                stdout_accumulator << line 
-                puts line
-              end
-            rescue Errno::EIO => e
-              Rails.logger.warn "stdout error on PTY"
-              Rails.logger.warn e
-            rescue JSON::GeneratorError => e
-              Rails.logger.warn "stdout error on PTY"
-              Rails.logger.warn e
-            ensure
-              Process.wait(pid) 
-            end
-        end
-        rescue PTY::ChildExited => e
-          puts "The child process exited! #{e}"
-        end
-
-        parsed_string = stdout_accumulator.gsub("OUTPUT:\r\n\r\n","")
-        puts "parsed_string"
-        puts parsed_string
-        
-        if parsed_string.split("\n").length > 1
-          parsed_string = parsed_string.split("\n")[1].gsub("\r\n","")
-        end
-
-        json_output = JSON.parse(parsed_string)
-        @bands = json_output
-        if @bands["bands"]
-          @bands = @bands["bands"]   
-        elsif @bands["matches"]
-          @bands = @bands["matches"]   
-        else
-          @bands = [@bands] unless @bands.is_a? Array
-        end 
-        Rails.logger.info "GPTscript successful.  Output is:"
-        Rails.logger.info @bands
-      end
     end
+
+    retries = 0
+    begin
+      if params[:input].present?
+        Dir.chdir(File.dirname(folder_script_path)) do
+          command = "GPTSCRIPT_API_SPOTIFY_COM_BEARER_TOKEN=#{spotify_token} gptscript --disable-cache" + " " + "coachella.gpt" + " --input " + params[:input]
+          command = command + " --venue " + params[:venue] || "coachella"
+          
+          Rails.logger.info "Command is "
+          Rails.logger.info {command}
+        
+          trigger = "OUTPUT:"
+          stdout_accumulator = "" 
+
+          # Run command
+          begin
+            PTY.spawn(command) do |stdout, stdin, pid|
+              begin
+                stdout.each do |line|
+                  ActionCable.server.config.logger.level = Logger::ERROR  #doesn't work to limit log ouptut
+                  ActionCable.server.broadcast("command_output_#{@uuid}", { key: "Command", line: line })
+                  
+                  if line.include?(trigger)
+                    stdout_accumulator = ""  #reset
+                  end
+                  stdout_accumulator << line 
+                  puts line
+                end
+              rescue Errno::EIO => e
+                Rails.logger.warn "stdout error on PTY"
+                Rails.logger.warn e
+              rescue JSON::GeneratorError => e
+                Rails.logger.warn "stdout error on PTY"
+                Rails.logger.warn e
+              ensure
+                Process.wait(pid) 
+              end
+          end
+          rescue PTY::ChildExited => e
+            puts "The child process exited! #{e}"
+          end
+
+          parsed_string = stdout_accumulator.gsub("OUTPUT:\r\n\r\n","")
+          puts "parsed_string"
+          puts parsed_string
+          
+          json_output = JSON.parse(parsed_string)
+         
+
+          @bands = json_output
+          if @bands["bands"]
+            @bands = @bands["bands"]   
+          elsif @bands["matches"]
+            @bands = @bands["matches"]   
+          else
+            @bands = [@bands] unless @bands.is_a? Array
+          end 
+          Rails.logger.info "GPTscript successful.  Output is:"
+          Rails.logger.info @bands
+        end
+      end #if
+    rescue JSON::ParserError => e
+        ActionCable.server.broadcast("command_output_#{@uuid}", { key: "Command", line: "****************" })
+        ActionCable.server.broadcast("command_output_#{@uuid}", { key: "Command", line: "JSON Parse error.  Retrying query..." })
+        ActionCable.server.broadcast("command_output_#{@uuid}", { key: "Command", line: "****************" })
+        Rails.logger.warn e
+        retries += 1
+        retry if retries < 3
+    end #begin
     render :index
   end
 
