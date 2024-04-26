@@ -21,7 +21,7 @@ Then pass $bands_at_venue to the get-spotify-songs tool to find $spotify_bands.
 
 For all those $spotify_bands found return that output in json format like so: {"bands": [{ "name": <band name string>, "spotifyUrl": url_value, songs: [{"name": value, "url": song_url_value}] },...]}.
 
-Do not abridge the list or miss any items from $spotify_bands.  Return the final output
+Do not abridge the list or miss any items from $spotify_bands and return the final output in one json object.
 
 ---
 name: get-spotify-songs
