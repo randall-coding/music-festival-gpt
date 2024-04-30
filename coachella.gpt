@@ -1,7 +1,7 @@
 tools: get-spotify-songs, sys.read
 args: bands: A list of bands you like.
 args: venue: place where the event is organized
-description: find bands the user might like at coachella along with 3 songs each
+description: find bands the user might like at a music festival along with 3 songs each
 json response: true
 temperature: 0.2
 
