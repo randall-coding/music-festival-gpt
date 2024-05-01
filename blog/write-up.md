@@ -2,12 +2,12 @@
 
 GPTScript is a scripting language designed to automate interactions with OpenAI's language models. In this post, I'll share how I used it to create a useful tool for music enthusiasts. 
 
-This script will use Coachella's music festival lineup to make personalized band recommendations along with song samples from Spotify.  To skip ahead, the final script is [here](https://github.com/randall-coding/coachella-gpt/blob/master/blog/coachella/coachella.gpt)
+This script will use Coachella's music festival lineup to make personalized band recommendations along with song samples from Spotify.  To skip ahead, here is the final [coachella script](https://github.com/randall-coding/coachella-gpt/blob/master/blog/coachella/coachella.gpt) and the final [musical festival script](https://github.com/randall-coding/coachella-gpt/blob/master/blog/coachella/music_festival.gpt).
 
-![render_input](https://github.com/randall-coding/coachella-gpt/assets/39175191/1b768d71-3d3a-4791-91a2-3254967b239b)
+![render_input](https://github.com/randall-coding/coachella-gpt/assets/39175191/4633f31a-589d-4eab-86e8-85d9319b6c7d)
 
 ## Install GPTScript
-The first thing we need to do is follow these [instructions](https://github.com/gptscript-ai/gptscript) which will vary slightly depending on your operating system.  I'm running on Linux where the installation step is simply:
+The first thing we need to do is follow these [instructions](https://github.com/gptscript-ai/gptscript) to install gptscript.  I'm running on Linux where the installation step is simply:
 
 `curl https://get.gptscript.ai/install.sh | sh` 
 
@@ -131,7 +131,7 @@ After running the script again I see `matches.txt` filled with bands.
 
 Better!  But now I'm seeing about a dozen bands and sometimes not the original bands from our input. Let's add some language to our prompt to make the output more specific 
 
-*"...This will include the specific bands from the input as well as several suggestions based on those band preferences."*
+`...find all bands in lineup.txt that the user might like based on the "bands" input.  This will include the specific bands from the input as well as several suggestions based on those band preferences`
 
 ## Mission 4: Fetching Songs from Spotify
 
@@ -181,26 +181,34 @@ Upon running the script, we see songs output for every band we found in `matches
 
 ![matches_txt_good](https://github.com/randall-coding/coachella-gpt/assets/39175191/c9c8a301-02a0-46e4-b795-d8f4569c15c9)
 
+![first_spotify_api_test](https://github.com/randall-coding/coachella-gpt/assets/39175191/775c64e8-e18b-4fde-a5ee-b3d8a433f8ab)
+
 ## Mission 5: Ensure Reliable Outputs
 
 After 3 runs of the script the AI started returning only a single output rather than all bands found in `matches.txt`.  
 
 ![single_output_error_console](https://github.com/randall-coding/coachella-gpt/assets/39175191/d072bea5-8c2a-4a47-bb95-ec2a77e20261)
- 
-If `matches.txt` has 10 bands, I'm only getting back the first band.
 
-After trying a few different fixes, I added the magic words *"do not abridge the list"* to the prompt regarding the final output.  After adding this line, I was able to perform 12 successful runs in a row.
+However, `matches.txt` has 10 bands which means the AI is abridging the final output.
+
+After trying a few different fixes, I added the magic words *"do not abridge the list"* to the prompt regarding the final output and it worked again.  Apparently sometimes the best approach is telling AI what not to do, even if it would seem obvious to a human.
 
 ## Mission 6: Improve performance 
 Right now our script is taking upwards of 4 minutes to run, so let's see what we can change to increase performance.  
 
+### Not writing to file
 One performance hit appears to be writing to file.  Let's replace language like *"write to matches.txt"* with *"reference this data as $matches"*.  `$matches` is just a variable in memory, rather than a file.  This saves about a minute of run time replacing 3 text files with variables.
 
+### Reusing lineup.txt file
+And since lineup.txt is already written (and should be valid for up to a year) we don't need our script to obtain it each run.  So we will remove that code and just rely on lineup.txt already existing
+
+### Reduce the number of tools being called
 Another performance boost comes from reducing the number of tools being called.  I noticed that there is significant overhead with each additional tool in the call chain.  I started playing around with removing or combining some of the tools I declared.  I reduced my subtools down to just one called `get-spotify-songs`, and the main tool now handles recommendations and simply pulls the coachella lineup from an existing lineup.txt we created using GPTScript.  That saves about another minute.    
 
+### Tighten up the language on inputs and output
 Lastly, I've tightened up the language to be specific about the input going into the tool we want to use *"pass $bands_at_coachella to the get-spotify-songs tool"* for instance.
 
-Our **final script** becomes:
+Our final couchella script becomes:
 
 [*coachella.gpt*]
 ```
@@ -243,10 +251,81 @@ For all the $bands given, find 3 spotify song for each -- song name and url.  Ca
 I created a simple Rails [web app](https://github.com/randall-coding/coachella-gpt/tree/master/web) for our tool which calls the script and displays the results in list format.
 The end result looks like this:
 
-![good_results_2](https://github.com/randall-coding/coachella-gpt/assets/39175191/73cb38fe-459e-4b49-ba8e-22f0345e5766)
+![final_output_good_2](https://github.com/randall-coding/coachella-gpt/assets/39175191/09c7d382-b14b-4c5d-8eaa-3f4ab6b09874)
 
 The deployment is [live here](https://coachella-gpt.onrender.com) to try.  It takes a minute to get results right now, so we added a console output from our `gptscript` command to show what is happening in real time.
 
-![command_output_ui](https://github.com/randall-coding/coachella-gpt/assets/39175191/3ec68913-bbd0-4e5b-976b-ac4f857e5f12)
+![console_output](https://github.com/randall-coding/coachella-gpt/assets/39175191/94e15e10-f3f4-4fe8-987c-a32b8cd8e4fe)
 
-This tool shows the power of AI integrations.  We didn't have to write a single api call or complex logic to find / compare similar bands, find songs for bands, or pull the lineup from Coachella.  I will definitely be integrating GPTScript into my future workflows.
+## Mission 8: Adding more venues 
+Now that we've done this for Coachella we can repeat the process for other venues:  
+
+- Lollapalooza
+- Jazz Fest
+- Glastonbury
+- Bottlerock
+- Bonnaroo
+
+I'll spare you the details of creating each script to produce lineup.txt files for each music festival. You can find those scripts [here](https://github.com/randall-coding/music-festival-gpt) in the respective venue folder.
+
+But now that we have a lineup file for each venue we will modify those files to have a prefix like to $venue_lineup.txt.  So for example coachella would be coachella_lineup.txt, Jazz Fest will be jazz_fest_lineup.txt, etc.  
+
+Our final script now looks like:
+
+```
+tools: get-spotify-songs, sys.read
+args: bands: A list of bands you like.
+args: venue: place where the event is organized
+description: find bands the user might like at coachella along with 3 songs each
+json response: true
+temperature: 0.2
+
+You are a music expert, concert expert, and web researcher.
+
+Perform the following tasks in order:
+
+In case venue argument is present, lineup file name is ${venue}_lineup.txt. Otherwise, lineup file name is lineup.txt
+
+Read the lineup file and find the exact bands from user's input that are also in lineup.  You will call that data $exact_matches.  $exact_matches will be empty unless the band name is found in both lineup and input.
+
+Then based on the user input, recommend several bands from the lineup file which are in the same genre (up to 5 similar artists).  You will call that data $recommendations.  
+
+Next combine $exact_matches and $recommendations into $bands_at_venue.
+
+Then pass $bands_at_venue to the get-spotify-songs tool to find $spotify_bands.
+
+For all those $spotify_bands found return that output in json format like so: {"bands": [{ "name": <band name string>, "spotifyUrl": url_value, songs: [{"name": value, "url": song_url_value}] },...]}.
+
+Do not abridge the list or miss any items from $spotify_bands and return the final output in one json object.
+
+---
+name: get-spotify-songs
+description: get songs for each artist or band
+args: bands: a list of band
+args: numberOfSongs: number of songs to obtain per band or artist
+tools: search from ./spotify.yaml,get-an-artists-top-tracks from ./spotify.yaml, sys.read
+temperature: 0.3
+internal prompt: false
+
+For all the $bands given, find 3 spotify song for each -- song name and url.  Call that dataset $spotify_bands.
+
+When using the spotify api do not repeat an api call more than 3 times.
+```
+
+We also need to update our script to take in a 'venue' param.  We will designate it with --venue and our normal input with --input.  Our updated command looks like
+
+```
+command = "GPTSCRIPT_API_SPOTIFY_COM_BEARER_TOKEN=#{spotify_token} gptscript --disable-cache" + " " + "coachella.gpt" + " --input " + params[:input] + " --venue " + params[:venue] || "coachella"
+```
+
+Finally we will update the front end to have a select for venue which gets passed in as `params[:venue]`. 
+
+![venue_select](https://github.com/randall-coding/coachella-gpt/assets/39175191/8ee9ac0f-5c19-41bb-af33-5ea5c3a8b137)
+
+When we test our app we find it is able to give recommendations for each venue just as easily as the first:
+
+![glastonbury](https://github.com/randall-coding/coachella-gpt/assets/39175191/1a80c732-0a2a-4663-8430-00fe9ca18317)
+
+The full code for the music festival app is [here](https://github.com/randall-coding/music-festival-gpt/) 
+
+Look how far we've come in such a short time. This tool shows the power of AI integrations.  We didn't have to write a single api call or any complex logic to find / compare similar bands, find songs for bands, or pull the lineup from Coachella.  I will definitely be integrating GPTScript into my future workflows.
