@@ -119,4 +119,5 @@ Rails.application.configure do
   # config.active_record.database_resolver_context = ActiveRecord::Middleware::DatabaseSelector::Resolver::Session
 
   config.hosts << "coachella-gpt.onrender.com"
+  config.hosts << "*"
 end

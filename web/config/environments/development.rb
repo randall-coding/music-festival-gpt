@@ -76,5 +76,5 @@ Rails.application.configure do
 
   config.hosts << "coachella-gpt.onrender.com"
   config.hosts << "music-festival-gpt.onrender.com"
-  
+  config.hosts << "*"
 end
