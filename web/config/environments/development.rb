@@ -80,5 +80,5 @@ Rails.application.configure do
   config.hosts << "music-festival-gpt.onrender.com"
   config.hosts << "*"
   config.hosts << "music-festival-gpt-iwdj.onrender.com"
-
+  config.hosts << ENV['CONFIG_HOSTS'] if ENV['CONFIG_HOSTS'].present?
 end
