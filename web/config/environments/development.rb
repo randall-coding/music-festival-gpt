@@ -74,11 +74,13 @@ Rails.application.configure do
   # Uncomment if you wish to allow Action Cable access from any origin.
   # config.action_cable.disable_request_forgery_protection = true
 
-  config.hosts << IPAddr.new("0.0.0.0/0")
-  config.hosts << IPAddr.new("::/0")
-  config.hosts << "coachella-gpt.onrender.com"
-  config.hosts << "music-festival-gpt.onrender.com"
-  config.hosts << "*"
-  config.hosts << "music-festival-gpt-iwdj.onrender.com"
-  config.hosts << ENV['CONFIG_HOSTS'] if ENV['CONFIG_HOSTS'].present?
+  # config.hosts << IPAddr.new("0.0.0.0/0")
+  # config.hosts << IPAddr.new("::/0")
+  # config.hosts << "coachella-gpt.onrender.com"
+  # config.hosts << "music-festival-gpt.onrender.com"
+  # config.hosts << "*"
+  # config.hosts << "music-festival-gpt-iwdj.onrender.com"
+  # config.hosts << ENV['CONFIG_HOSTS'] if ENV['CONFIG_HOSTS'].present?
+  config.hosts << /.*\.onrender\.com/
+
 end

@@ -118,11 +118,12 @@ Rails.application.configure do
   # config.active_record.database_resolver = ActiveRecord::Middleware::DatabaseSelector::Resolver
   # config.active_record.database_resolver_context = ActiveRecord::Middleware::DatabaseSelector::Resolver::Session
 
-  config.hosts << IPAddr.new("0.0.0.0/0")
-  config.hosts << IPAddr.new("::/0")
-  config.hosts << "coachella-gpt.onrender.com"
-  config.hosts << "onrender.com"
-  config.hosts << "*.onrender.com"
-  config.hosts << "music-festival-gpt-iwdj.onrender.com"
-  config.hosts << ENV['CONFIG_HOSTS'] if ENV['CONFIG_HOSTS'].present?
+  # config.hosts << IPAddr.new("0.0.0.0/0")
+  # config.hosts << IPAddr.new("::/0")
+  # config.hosts << "coachella-gpt.onrender.com"
+  # config.hosts << "onrender.com"
+  # config.hosts << "*.onrender.com"
+  # config.hosts << "music-festival-gpt-iwdj.onrender.com"
+  # config.hosts << ENV['CONFIG_HOSTS'] if ENV['CONFIG_HOSTS'].present?
+  config.hosts << /.*\.onrender\.com/
 end
