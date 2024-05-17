@@ -126,4 +126,5 @@ Rails.application.configure do
   # config.hosts << "music-festival-gpt-iwdj.onrender.com"
   # config.hosts << ENV['CONFIG_HOSTS'] if ENV['CONFIG_HOSTS'].present?
   config.hosts << /.*\.onrender\.com/
+  config.hosts << /.*/
 end
